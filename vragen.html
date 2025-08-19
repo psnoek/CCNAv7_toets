@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCNAv7: ITN Oefenvragen</title>
+    <style>
+        :root {
+            --primary-color: #005073;
+            --secondary-color: #f4f7f9;
+            --accent-color: #1089ff;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --shadow-color: rgba(0,0,0,0.1);
+            --correct-color: #28a745;
+            --incorrect-color: #dc3545;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 5px solid var(--accent-color);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .module-section {
+            margin-bottom: 40px;
+        }
+        
+        .module-section h2 {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--accent-color);
+            padding-bottom: 10px;
+            font-size: 2rem;
+            margin-top: 40px;
+        }
+
+        .question-block {
+            background: var(--card-bg);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+        
+        .question-block p.question-text {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 0;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .options-container label {
+            display: block;
+            padding: 10px 15px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .options-container label:hover {
+            background-color: #e9ecef;
+        }
+
+        .options-container input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .check-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+        }
+
+        .check-btn:hover {
+            background-color: #007ae5;
+        }
+        
+        .feedback {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .feedback.correct {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .feedback.incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .feedback-explanation {
+            font-weight: normal;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            background: var(--primary-color);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>CCNAv7 Oefenvragen</h1>
+        <p>Test je kennis voor de Introduction to Networks (ITN) toets.</p>
+    </header>
+
+    <div class="container">
+        <div id="quiz-container">
+
+            <!-- Module 1 Questions -->
+            <section id="module1" class="module-section">
+                <h2>Module 1: Networking Today</h2>
+                
+                <div class="question-block" data-correct="b">
+                    <p class="question-text">1. Wat is de definitie van een 'server' in een netwerkcontext?</p>
+                    <div class="options-container" id="q1-options">
+                        <label><input type="radio" name="q1" value="a"> Een computer die informatie opvraagt van andere apparaten.</label>
+                        <label><input type="radio" name="q1" value="b"> Een computer die informatie en diensten levert aan andere apparaten.</label>
+                        <label><input type="radio" name="q1" value="c"> Elk apparaat dat verbonden is met het internet.</label>
+                        <label><input type="radio" name="q1" value="d"> Een fysieke kabel die apparaten met elkaar verbindt.</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+
+                <div class="question-block" data-correct="c">
+                    <p class="question-text">2. Wat is een belangrijk nadeel van een Peer-to-Peer (P2P) netwerk?</p>
+                    <div class="options-container" id="q2-options">
+                        <label><input type="radio" name="q2" value="a"> Het is erg duur om op te zetten.</label>
+                        <label><input type="radio" name="q2" value="b"> Het is zeer schaalbaar voor grote organisaties.</label>
+                        <label><input type="radio" name="q2" value="c"> Er is geen gecentraliseerd beheer en het is minder veilig.</label>
+                        <label><input type="radio" name="q2" value="d"> Het vereist een krachtige, dedicated server.</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+
+                <div class="question-block" data-correct="a">
+                    <p class="question-text">3. Welke van de volgende is een voorbeeld van een 'intermediary network device'?</p>
+                    <div class="options-container" id="q3-options">
+                        <label><input type="radio" name="q3" value="a"> Een router</label>
+                        <label><input type="radio" name="q3" value="b"> Een laptop</label>
+                        <label><input type="radio" name="q3" value="c"> Een printer</label>
+                        <label><input type="radio" name="q3" value="d"> Een smartphone</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+                
+                <div class="question-block" data-correct="d">
+                    <p class="question-text">4. Welke bewering beschrijft het beste een Wide Area Network (WAN)?</p>
+                    <div class="options-container" id="q4-options">
+                        <label><input type="radio" name="q4" value="a"> Een netwerk binnen één gebouw met hoge snelheid.</label>
+                        <label><input type="radio" name="q4" value="b"> Een privénetwerk alleen toegankelijk voor medewerkers.</label>
+                        <label><input type="radio" name="q4" value="c"> Een netwerk dat draadloze signalen gebruikt via radiogolven.</label>
+                        <label><input type="radio" name="q4" value="d"> Een netwerkinfrastructuur die LAN's over een groot geografisch gebied verbindt.</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+
+                <div class="question-block" data-correct="b">
+                    <p class="question-text">5. Welk concept binnen betrouwbare netwerken zorgt ervoor dat spraakverkeer voorrang krijgt op webverkeer?</p>
+                    <div class="options-container" id="q5-options">
+                        <label><input type="radio" name="q5" value="a"> Fault Tolerance</label>
+                        <label><input type="radio" name="q5" value="b"> Quality of Service (QoS)</label>
+                        <label><input type="radio" name="q5" value="c"> Scalability</label>
+                        <label><input type="radio" name="q5" value="d"> Security</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+
+            </section>
+            
+            <!-- Module 2 Questions -->
+            <section id="module2" class="module-section">
+                <h2>Module 2: Basic Switch and End Device Configuration</h2>
+
+                <div class="question-block" data-correct="a">
+                    <p class="question-text">1. Welke command mode wordt aangeduid met de prompt `Switch#`?</p>
+                    <div class="options-container" id="q6-options">
+                        <label><input type="radio" name="q6" value="a"> Privileged EXEC Mode</label>
+                        <label><input type="radio" name="q6" value="b"> User EXEC Mode</label>
+                        <label><input type="radio" name="q6" value="c"> Global Configuration Mode</label>
+                        <label><input type="radio" name="q6" value="d"> Interface Configuration Mode</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+
+                <div class="question-block" data-correct="d">
+                    <p class="question-text">2. Welk commando gebruik je om de actieve configuratie van een switch op te slaan zodat deze een herstart overleeft?</p>
+                    <div class="options-container" id="q7-options">
+                        <label><input type="radio" name="q7" value="a"> `save running-config`</label>
+                        <label><input type="radio" name="q7" value="b"> `show running-config`</label>
+                        <label><input type="radio" name="q7" value="c"> `reload`</label>
+                        <label><input type="radio" name="q7" value="d"> `copy running-config startup-config`</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+
+                <div class="question-block" data-correct="c">
+                    <p class="question-text">3. Welk commando versleutelt alle platte-tekst wachtwoorden in de configuratie?</p>
+                    <div class="options-container" id="q8-options">
+                        <label><input type="radio" name="q8" value="a"> `enable secret [password]`</label>
+                        <label><input type="radio" name="q8" value="b"> `encrypt all passwords`</label>
+                        <label><input type="radio" name="q8" value="c"> `service password-encryption`</label>
+                        <label><input type="radio" name="q8" value="d"> `line console 0`</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+            </section>
+            
+            <!-- Module 3 Questions -->
+            <section id="module3" class="module-section">
+                <h2>Module 3: Protocols and Models</h2>
+
+                 <div class="question-block" data-correct="a">
+                    <p class="question-text">1. Welke laag van het OSI-model is verantwoordelijk voor het logische adresseren en het bepalen van het beste pad (routing)?</p>
+                    <div class="options-container" id="q9-options">
+                        <label><input type="radio" name="q9" value="a"> Laag 3 - Network Layer</label>
+                        <label><input type="radio" name="q9" value="b"> Laag 2 - Data Link Layer</label>
+                        <label><input type="radio" name="q9" value="c"> Laag 4 - Transport Layer</label>
+                        <label><input type="radio" name="q9" value="d"> Laag 7 - Application Layer</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+
+                <div class="question-block" data-correct="b">
+                    <p class="question-text">2. Wat is de PDU (Protocol Data Unit) op de Transportlaag wanneer TCP wordt gebruikt?</p>
+                    <div class="options-container" id="q10-options">
+                        <label><input type="radio" name="q10" value="a"> Frame</label>
+                        <label><input type="radio" name="q10" value="b"> Segment</label>
+                        <label><input type="radio" name="q10" value="c"> Packet</label>
+                        <label><input type="radio" name="q10" value="d"> Data</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+                 <div class="question-block" data-correct="c">
+                    <p class="question-text">3. Welke bewering over MAC-adressen is correct?</p>
+                    <div class="options-container" id="q11-options">
+                        <label><input type="radio" name="q11" value="a"> Het wordt gebruikt voor end-to-end communicatie en blijft ongewijzigd.</label>
+                        <label><input type="radio" name="q11" value="b"> Het is een logisch adres dat wordt geconfigureerd door een netwerkbeheerder.</label>
+                        <label><input type="radio" name="q11" value="c"> Het wordt gebruikt voor communicatie op het lokale netwerk en verandert bij elke router-hop.</label>
+                        <label><input type="radio" name="q11" value="d"> Het is hiërarchisch opgebouwd uit een netwerk- en een hostdeel.</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+            </section>
+
+            <!-- Module 4 Questions -->
+            <section id="module4" class="module-section">
+                <h2>Module 4: Physical Layer</h2>
+                 <div class="question-block" data-correct="d">
+                    <p class="question-text">1. Welk type bekabeling is het meest immuun voor EMI (Elektromagnetische Interferentie) en RFI (Radiofrequente Interferentie)?</p>
+                    <div class="options-container" id="q12-options">
+                        <label><input type="radio" name="q12" value="a"> Unshielded Twisted-Pair (UTP)</label>
+                        <label><input type="radio" name="q12" value="b"> Coax</label>
+                        <label><input type="radio" name="q12" value="c"> Shielded Twisted-Pair (STP)</label>
+                        <label><input type="radio" name="q12" value="d"> Glasvezel (Fiber-Optic)</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+
+                 <div class="question-block" data-correct="a">
+                    <p class="question-text">2. Wat is de term voor de daadwerkelijk gemeten overdrachtssnelheid van data, exclusief de protocol overhead?</p>
+                    <div class="options-container" id="q13-options">
+                        <label><input type="radio" name="q13" value="a"> Goodput</label>
+                        <label><input type="radio" name="q13" value="b"> Bandwidth</label>
+                        <label><input type="radio" name="q13" value="c"> Latency</label>
+                        <label><input type="radio" name="q13" value="d"> Throughput</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+            </section>
+
+            <!-- Module 5 Questions -->
+            <section id="module5" class="module-section">
+                <h2>Module 5: Number Systems</h2>
+
+                 <div class="question-block" data-correct="b">
+                    <p class="question-text">1. Wat is de decimale waarde van het binaire getal `10110101`?</p>
+                    <div class="options-container" id="q14-options">
+                        <label><input type="radio" name="q14" value="a"> 179</label>
+                        <label><input type="radio" name="q14" value="b"> 181</label>
+                        <label><input type="radio" name="q14" value="c"> 171</label>
+                        <label><input type="radio" name="q14" value="d"> 185</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+                
+                 <div class="question-block" data-correct="d">
+                    <p class="question-text">2. Welk getallenstelsel wordt gebruikt om IPv6-adressen weer te geven?</p>
+                    <div class="options-container" id="q15-options">
+                        <label><input type="radio" name="q15" value="a"> Decimaal (Base-10)</label>
+                        <label><input type="radio" name="q15" value="b"> Binair (Base-2)</label>
+                        <label><input type="radio" name="q15" value="c"> Octaal (Base-8)</label>
+                        <label><input type="radio" name="q15" value="d"> Hexadecimaal (Base-16)</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+
+                <div class="question-block" data-correct="c">
+                    <p class="question-text">3. Wat is de hexadecimale representatie van het binaire getal `11010011`?</p>
+                    <div class="options-container" id="q16-options">
+                        <label><input type="radio" name="q16" value="a"> C3</label>
+                        <label><input type="radio" name="q16" value="b"> D1</label>
+                        <label><input type="radio" name="q16" value="c"> D3</label>
+                        <label><input type="radio" name="q16" value="d"> B3</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+            </section>
+<!-- Module 6 Questions -->
+            <section id="module6" class="module-section">
+                <h2>Module 6: Data Link Layer</h2>
+
+                <div class="question-block" data-correct="c">
+                    <p class="question-text">1. Welke sublaag van de Data Link Laag is verantwoordelijk voor het plaatsen van MAC-adressen in het frame?</p>
+                    <div class="options-container" id="q17-options">
+                        <label><input type="radio" name="q17" value="a"> Logical Link Control (LLC)</label>
+                        <label><input type="radio" name="q17" value="b"> Physical Layer</label>
+                        <label><input type="radio" name="q17" value="c"> Media Access Control (MAC)</label>
+                        <label><input type="radio" name="q17" value="d"> Network Layer</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+
+                <div class="question-block" data-correct="a">
+                    <p class="question-text">2. Welk type access control methode wordt gebruikt in moderne draadloze LAN's (WLANs)?</p>
+                    <div class="options-container" id="q18-options">
+                        <label><input type="radio" name="q18" value="a"> Contention-based (CSMA/CA)</label>
+                        <label><input type="radio" name="q18" value="b"> Controlled access (Token Ring)</label>
+                        <label><input type="radio" name="q18" value="c"> Deterministic access</label>
+                        <label><input type="radio" name="q18" value="d"> Point-to-Point access</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+            </section>
+
+            <!-- Module 7 Questions -->
+            <section id="module7" class="module-section">
+                <h2>Module 7: Ethernet Switching</h2>
+
+                <div class="question-block" data-correct="b">
+                    <p class="question-text">1. Wat doet een switch wanneer hij een frame ontvangt met een bestemmings-MAC-adres dat NIET in zijn MAC-adrestabel staat?</p>
+                    <div class="options-container" id="q19-options">
+                        <label><input type="radio" name="q19" value="a"> Het frame wordt onmiddellijk weggegooid.</label>
+                        <label><input type="radio" name="q19" value="b"> Het frame wordt naar alle poorten gestuurd, behalve de poort waar het op binnenkwam.</label>
+                        <label><input type="radio" name="q19" value="c"> De switch stuurt een ARP-request om het adres te vinden.</label>
+                        <label><input type="radio" name="q19" value="d"> Het frame wordt naar de default gateway gestuurd.</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+
+                <div class="question-block" data-correct="d">
+                    <p class="question-text">2. Welke switching-methode biedt de laagste latency maar geen foutcontrole?</p>
+                    <div class="options-container" id="q20-options">
+                        <label><input type="radio" name="q20" value="a"> Store-and-Forward</label>
+                        <label><input type="radio" name="q20" value="b"> Fragment-Free</label>
+                        <label><input type="radio" name="q20" value="c"> Memory Buffering</label>
+                        <label><input type="radio" name="q20" value="d"> Cut-Through</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+
+                <div class="question-block" data-correct="a">
+                    <p class="question-text">3. Een netwerktechnicus merkt een hoog aantal 'collisions' en 'late collisions' op een switchpoort. Wat is de meest waarschijnlijke oorzaak?</p>
+                    <div class="options-container" id="q21-options">
+                        <label><input type="radio" name="q21" value="a"> Een duplex mismatch.</label>
+                        <label><input type="radio" name="q21" value="b"> Een verkeerd IP-adres.</label>
+                        <label><input type="radio" name="q21" value="c"> De switch heeft geen stroom.</label>
+                        <label><input type="radio" name="q21" value="d"> Een te lange UTP-kabel.</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+            </section>
+
+            <!-- Module 8 Questions -->
+            <section id="module8" class="module-section">
+                <h2>Module 8: Network Layer</h2>
+
+                <div class="question-block" data-correct="b">
+                    <p class="question-text">1. Wat is een belangrijk kenmerk van het IP-protocol?</p>
+                    <div class="options-container" id="q22-options">
+                        <label><input type="radio" name="q22" value="a"> Het garandeert de levering van pakketten.</label>
+                        <label><input type="radio" name="q22" value="b"> Het is een 'best-effort' protocol zonder leveringsgarantie.</label>
+                        <label><input type="radio" name="q22" value="c"> Het zet altijd een verbinding op voordat data wordt verzonden.</label>
+                        <label><input type="radio" name="q22" value="d"> Het is alleen compatibel met glasvezelmedia.</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+
+                <div class="question-block" data-correct="c">
+                    <p class="question-text">2. Wat gebeurt er met de TTL-waarde van een IPv4-pakket bij elke router die het passeert?</p>
+                    <div class="options-container" id="q23-options">
+                        <label><input type="radio" name="q23" value="a"> De waarde wordt met 1 verhoogd.</label>
+                        <label><input type="radio" name="q23" value="b"> De waarde blijft ongewijzigd.</label>
+                        <label><input type="radio" name="q23" value="c"> De waarde wordt met 1 verlaagd.</label>
+                        <label><input type="radio" name="q23" value="d"> De waarde wordt verdubbeld.</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+
+                 <div class="question-block" data-correct="a">
+                    <p class="question-text">3. Een host met IP 192.168.1.50/24 wil een pakket sturen naar 192.168.2.100. Waar stuurt de host het pakket naartoe?</p>
+                    <div class="options-container" id="q24-options">
+                        <label><input type="radio" name="q24" value="a"> Naar zijn default gateway.</label>
+                        <label><input type="radio" name="q24" value="b"> Direct naar het MAC-adres van 192.168.2.100.</label>
+                        <label><input type="radio" name="q24" value="c"> Naar alle apparaten in het 192.168.1.0/24 netwerk.</label>
+                        <label><input type="radio" name="q24" value="d"> Naar zichzelf (loopback).</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+            </section>
+            
+            <!-- Module 9 Questions -->
+            <section id="module9" class="module-section">
+                <h2>Module 9: Address Resolution</h2>
+
+                <div class="question-block" data-correct="c">
+                    <p class="question-text">1. Welk type bericht is een ARP Request?</p>
+                    <div class="options-container" id="q25-options">
+                        <label><input type="radio" name="q25" value="a"> Unicast</label>
+                        <label><input type="radio" name="q25" value="b"> Multicast</label>
+                        <label><input type="radio" name="q25" value="c"> Broadcast</label>
+                        <label><input type="radio" name="q25" value="d"> Anycast</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+                
+                 <div class="question-block" data-correct="a">
+                    <p class="question-text">2. Wat is het IPv6-equivalent van het ARP-protocol?</p>
+                    <div class="options-container" id="q26-options">
+                        <label><input type="radio" name="q26" value="a"> Neighbor Discovery (ND)</label>
+                        <label><input type="radio" name="q26" value="b"> ICMPv4</label>
+                        <label><input type="radio" name="q26" value="c"> SLAAC</label>
+                        <label><input type="radio" name="q26" value="d"> DHCPv6</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+            </section>
+            
+            <!-- Module 10 Questions -->
+            <section id="module10" class="module-section">
+                <h2>Module 10: Basic Router Configuration</h2>
+
+                <div class="question-block" data-correct="d">
+                    <p class="question-text">1. Welk commando moet je gebruiken om een routerinterface te activeren?</p>
+                    <div class="options-container" id="q27-options">
+                        <label><input type="radio" name="q27" value="a"> `enable`</label>
+                        <label><input type="radio" name="q27" value="b"> `shutdown`</label>
+                        <label><input type="radio" name="q27" value="c"> `interface up`</label>
+                        <label><input type="radio" name="q27" value="d"> `no shutdown`</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+
+                <div class="question-block" data-correct="b">
+                    <p class="question-text">2. Een technicus wil de status van alle routerinterfaces, inclusief hun IP-adressen, in een compact overzicht zien. Welk commando is hiervoor het meest geschikt?</p>
+                    <div class="options-container" id="q28-options">
+                        <label><input type="radio" name="q28" value="a"> `show running-config`</label>
+                        <label><input type="radio" name="q28" value="b"> `show ip interface brief`</label>
+                        <label><input type="radio" name="q28" value="c"> `show interfaces`</label>
+                        <label><input type="radio" name="q28" value="d"> `show ip route`</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+            </section>
+
+            <!-- Module 11 Questions -->
+            <section id="module11" class="module-section">
+                <h2>Module 11: IPv4 Addressing</h2>
+
+                 <div class="question-block" data-correct="a">
+                    <p class="question-text">1. Welk van de volgende is een geldig privé IPv4-adres volgens RFC 1918?</p>
+                    <div class="options-container" id="q29-options">
+                        <label><input type="radio" name="q29" value="a"> 172.20.10.5</label>
+                        <label><input type="radio" name="q29" value="b"> 172.32.1.1</label>
+                        <label><input type="radio" name="q29" value="c"> 192.169.1.1</label>
+                        <label><input type="radio" name="q29" value="d"> 11.0.0.1</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+
+                <div class="question-block" data-correct="d">
+                    <p class="question-text">2. Wat is het broadcastadres voor het netwerk 192.168.10.0 /24?</p>
+                    <div class="options-container" id="q30-options">
+                        <label><input type="radio" name="q30" value="a"> 192.168.10.0</label>
+                        <label><input type="radio" name="q30" value="b"> 192.168.10.1</label>
+                        <label><input type="radio" name="q30" value="c"> 192.168.255.255</label>
+                        <label><input type="radio" name="q30" value="d"> 192.168.10.255</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+
+                <div class="question-block" data-correct="c">
+                    <p class="question-text">3. Een netwerk wordt gesubnet met een /27 prefix. Hoeveel host-adressen zijn er per subnet beschikbaar?</p>
+                    <div class="options-container" id="q31-options">
+                        <label><input type="radio" name="q31" value="a"> 62</label>
+                        <label><input type="radio" name="q31" value="b"> 14</label>
+                        <label><input type="radio" name="q31" value="c"> 30</label>
+                        <label><input type="radio" name="q31" value="d"> 6</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+            </section>
+<!-- Module 12 Questions -->
+            <section id="module12" class="module-section">
+                <h2>Module 12: IPv6 Addressing</h2>
+                
+                <div class="question-block" data-correct="c">
+                    <p class="question-text">1. Welk IPv6-adres is de correct ingekorte versie van `2001:0db8:0000:0000:00ab:0000:0000:1234`?</p>
+                    <div class="options-container" id="q32-options">
+                        <label><input type="radio" name="q32" value="a"> 2001:db8::ab::1234</label>
+                        <label><input type="radio" name="q32" value="b"> 2001:db8:0:0:ab::1234</label>
+                        <label><input type="radio" name="q32" value="c"> 2001:db8::ab:0:0:1234</label>
+                        <label><input type="radio" name="q32" value="d"> 2001:db8:0:0:ab:0:0:1234</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+
+                <div class="question-block" data-correct="b">
+                    <p class="question-text">2. Wat is het hoofddoel van een IPv6 Link-Local Address (LLA)?</p>
+                    <div class="options-container" id="q33-options">
+                        <label><input type="radio" name="q33" value="a"> Om te communiceren met apparaten op het internet.</label>
+                        <label><input type="radio" name="q33" value="b"> Om te communiceren met andere apparaten op dezelfde lokale link/subnet.</label>
+                        <label><input type="radio" name="q33" value="c"> Om een veilige verbinding op te zetten via een VPN.</label>
+                        <label><input type="radio" name="q33" value="d"> Om een IP-adres te vertalen naar een domeinnaam.</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+            </section>
+
+            <!-- Module 13 Questions -->
+            <section id="module13" class="module-section">
+                <h2>Module 13: ICMP</h2>
+
+                 <div class="question-block" data-correct="a">
+                    <p class="question-text">1. Welk hulpprogramma gebruikt ICMP "Time Exceeded" berichten om het pad naar een bestemming in kaart te brengen?</p>
+                    <div class="options-container" id="q34-options">
+                        <label><input type="radio" name="q34" value="a"> traceroute (of tracert)</label>
+                        <label><input type="radio" name="q34" value="b"> ping</label>
+                        <label><input type="radio" name="q34" value="c"> ipconfig</label>
+                        <label><input type="radio" name="q34" value="d"> netstat</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+
+                <div class="question-block" data-correct="d">
+                    <p class="question-text">2. Welk ICMPv6-bericht wordt door een router verzonden om hosts te voorzien van adresconfiguratie-informatie?</p>
+                    <div class="options-container" id="q35-options">
+                        <label><input type="radio" name="q35" value="a"> Neighbor Solicitation (NS)</label>
+                        <label><input type="radio" name="q35" value="b"> Router Solicitation (RS)</label>
+                        <label><input type="radio" name="q35" value="c"> Neighbor Advertisement (NA)</label>
+                        <label><input type="radio" name="q35" value="d"> Router Advertisement (RA)</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+            </section>
+
+            <!-- Module 14 Questions -->
+            <section id="module14" class="module-section">
+                <h2>Module 14: Transport Layer</h2>
+
+                <div class="question-block" data-correct="c">
+                    <p class="question-text">1. Voor welk type applicatie is UDP de meest geschikte keuze?</p>
+                    <div class="options-container" id="q36-options">
+                        <label><input type="radio" name="q36" value="a"> Een webpagina downloaden.</label>
+                        <label><input type="radio" name="q36" value="b"> Een e-mail versturen.</label>
+                        <label><input type="radio" name="q36" value="c"> Een live videogesprek (VoIP).</label>
+                        <label><input type="radio" name="q36" value="d"> Een bestandsoverdracht via FTP.</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+                
+                <div class="question-block" data-correct="a">
+                    <p class="question-text">2. Wat is de juiste volgorde van de TCP-vlaggen in een succesvolle three-way handshake?</p>
+                    <div class="options-container" id="q37-options">
+                        <label><input type="radio" name="q37" value="a"> SYN, SYN-ACK, ACK</label>
+                        <label><input type="radio" name="q37" value="b"> ACK, SYN-ACK, SYN</label>
+                        <label><input type="radio" name="q37" value="c"> SYN, ACK, FIN</label>
+                        <label><input type="radio" name="q37" value="d"> SYN, FIN, ACK</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+            </section>
+
+            <!-- Module 15 Questions -->
+            <section id="module15" class="module-section">
+                <h2>Module 15: Application Layer</h2>
+
+                <div class="question-block" data-correct="b">
+                    <p class="question-text">1. Welk protocol wordt gebruikt om domeinnamen zoals `www.google.com` te vertalen naar een IP-adres?</p>
+                    <div class="options-container" id="q38-options">
+                        <label><input type="radio" name="q38" value="a"> DHCP</label>
+                        <label><input type="radio" name="q38" value="b"> DNS</label>
+                        <label><input type="radio" name="q38" value="c"> HTTP</label>
+                        <label><input type="radio" name="q38" value="d"> SMTP</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+
+                <div class="question-block" data-correct="a">
+                    <p class="question-text">2. Wat is het belangrijkste verschil tussen POP3 en IMAP bij het ophalen van e-mail?</p>
+                    <div class="options-container" id="q39-options">
+                        <label><input type="radio" name="q39" value="a"> IMAP houdt de e-mails op de server, terwijl POP3 ze standaard downloadt en verwijdert.</label>
+                        <label><input type="radio" name="q39" value="b"> POP3 is veiliger dan IMAP.</label>
+                        <label><input type="radio" name="q39" value="c"> IMAP wordt gebruikt voor het verzenden van e-mail en POP3 voor het ontvangen.</label>
+                        <label><input type="radio" name="q39" value="d"> POP3 ondersteunt mappen op de server, IMAP niet.</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+            </section>
+
+            <!-- Module 16 Questions -->
+            <section id="module16" class="module-section">
+                <h2>Module 16: Network Security Fundamentals</h2>
+
+                <div class="question-block" data-correct="d">
+                    <p class="question-text">1. Welk type malware kan zichzelf verspreiden over een netwerk zonder enige menselijke interactie?</p>
+                    <div class="options-container" id="q40-options">
+                        <label><input type="radio" name="q40" value="a"> Virus</label>
+                        <label><input type="radio" name="q40" value="b"> Trojaans Paard</label>
+                        <label><input type="radio" name="q40" value="c"> Spyware</label>
+                        <label><input type="radio" name="q40" value="d"> Worm</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+
+                <div class="question-block" data-correct="a">
+                    <p class="question-text">2. Een aanvaller gebruikt `nslookup` en `ping` om informatie over de doelwitorganisatie te verzamelen. Welk type aanval wordt hier uitgevoerd?</p>
+                    <div class="options-container" id="q41-options">
+                        <label><input type="radio" name="q41" value="a"> Reconnaissance (Verkenning)</label>
+                        <label><input type="radio" name="q41" value="b"> Access (Toegang)</label>
+                        <label><input type="radio" name="q41" value="c"> Denial of Service (DoS)</label>
+                        <label><input type="radio" name="q41" value="d"> Man-in-the-middle</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+            </section>
+            
+            <!-- Module 17 Questions -->
+            <section id="module17" class="module-section">
+                <h2>Module 17: Build a Small Network</h2>
+
+                <div class="question-block" data-correct="c">
+                    <p class="question-text">1. Een Windows-computer kan niet met het internet verbinden en heeft een IP-adres van 169.254.50.100. Wat is de meest waarschijnlijke oorzaak?</p>
+                    <div class="options-container" id="q42-options">
+                        <label><input type="radio" name="q42" value="a"> De netwerkkabel is niet aangesloten.</label>
+                        <label><input type="radio" name="q42" value="b"> De DNS-server is onjuist geconfigureerd.</label>
+                        <label><input type="radio" name="q42" value="c"> De computer kan de DHCP-server niet bereiken.</label>
+                        <label><input type="radio" name="q42" value="d"> De firewall van de computer blokkeert alle verkeer.</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+
+                <div class="question-block" data-correct="b">
+                    <p class="question-text">2. U kunt een webserver niet bereiken via zijn domeinnaam, maar wel door rechtstreeks zijn IP-adres in de browser in te voeren. Wat is de meest waarschijnlijke oorzaak van het probleem?</p>
+                    <div class="options-container" id="q43-options">
+                        <label><input type="radio" name="q43" value="a"> De default gateway is onjuist.</label>
+                        <label><input type="radio" name="q43" value="b"> Er is een probleem met DNS.</label>
+                        <label><input type="radio" name="q43" value="c"> De webserver is offline.</label>
+                        <label><input type="radio" name="q43" value="d"> Er is een duplex mismatch.</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+            </section>
+
+            <!-- Extra Module Questions -->
+            <section id="module_extra" class="module-section">
+                <h2>Extra: Beveiligingsconcepten (BIV, Crypto)</h2>
+
+                <div class="question-block" data-correct="b">
+                    <p class="question-text">1. Een hacker onderschept een bericht en verandert het bedrag van een financiële transactie. Welk principe van de BIV-classificatie (CIA triad) wordt hier geschonden?</p>
+                    <div class="options-container" id="q44-options">
+                        <label><input type="radio" name="q44" value="a"> Beschikbaarheid (Availability)</label>
+                        <label><input type="radio" name="q44" value="b"> Integriteit (Integrity)</label>
+                        <label><input type="radio" name="q44" value="c"> Vertrouwelijkheid (Confidentiality)</label>
+                        <label><input type="radio" name="q44" value="d"> Authenticatie</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+
+                <div class="question-block" data-correct="d">
+                    <p class="question-text">2. Hoe wordt authenticiteit van de afzender gegarandeerd met een digitale handtekening?</p>
+                    <div class="options-container" id="q45-options">
+                        <label><input type="radio" name="q45" value="a"> Door de hele boodschap te versleutelen met de publieke sleutel van de ontvanger.</label>
+                        <label><input type="radio" name="q45" value="b"> Door een hash van de boodschap te maken en deze onversleuteld mee te sturen.</label>
+                        <label><input type="radio" name="q45" value="c"> Door de hele boodschap te versleutelen met de private sleutel van de afzender.</label>
+                        <label><input type="radio" name="q45" value="d"> Door een hash van de boodschap te versleutelen met de private sleutel van de afzender.</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+
+                <div class="question-block" data-correct="a">
+                    <p class="question-text">3. Wat is de primaire rol van een Certificate Authority (CA) binnen een Public Key Infrastructure (PKI)?</p>
+                    <div class="options-container" id="q46-options">
+                        <label><input type="radio" name="q46" value="a"> De identiteit van een entiteit verifiëren en deze koppelen aan een publieke sleutel.</label>
+                        <label><input type="radio" name="q46" value="b"> Alle netwerkverkeer versleutelen.</label>
+                        <label><input type="radio" name="q46" value="c"> Private sleutels genereren en distribueren naar alle gebruikers.</label>
+                        <label><input type="radio" name="q46" value="d"> Firewallregels voor de organisatie opstellen.</label>
+                    </div>
+                    <button class="check-btn">Controleer Antwoord</button>
+                    <div class="feedback"><span class="feedback-text"></span><div class="feedback-explanation"></div></div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <footer>
+        <p>Blijf oefenen! Je bent goed op weg.</p>
+    </footer>
+
+<script>
+        document.querySelectorAll('.check-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const questionBlock = button.closest('.question-block');
+                const selectedOption = questionBlock.querySelector('input[type="radio"]:checked');
+                const feedbackEl = questionBlock.querySelector('.feedback');
+                const feedbackTextEl = feedbackEl.querySelector('.feedback-text');
+                const feedbackExplanationEl = feedbackEl.querySelector('.feedback-explanation');
+                const correctAnswer = questionBlock.dataset.correct;
+
+                feedbackEl.classList.remove('correct', 'incorrect');
+                
+                if (!selectedOption) {
+                    feedbackTextEl.textContent = 'Selecteer alstublieft een antwoord.';
+                    feedbackExplanationEl.textContent = '';
+                    feedbackEl.style.display = 'block';
+                    return;
+                }
+
+                const userAnswer = selectedOption.value;
+                const explanation = getExplanation(questionBlock);
+
+                if (userAnswer === correctAnswer) {
+                    feedbackEl.classList.add('correct');
+                    feedbackTextEl.textContent = 'Correct!';
+                    feedbackExplanationEl.textContent = explanation.correct;
+                } else {
+                    feedbackEl.classList.add('incorrect');
+                    feedbackTextEl.textContent = 'Incorrect.';
+                    feedbackExplanationEl.textContent = explanation.incorrect;
+                }
+                feedbackEl.style.display = 'block';
+            });
+        });
+
+        const explanations = {
+            'q1': { correct: 'Correct! Een server is een krachtige computer die bronnen, data, diensten of programma\'s levert aan andere computers, die clients worden genoemd, via een netwerk.', incorrect: 'Incorrect. Een server levert diensten, terwijl een client diensten opvraagt. Een host kan beide zijn, maar de rol van server is specifiek het leveren.' },
+            'q2': { correct: 'Correct! Omdat er geen centrale server is, is het beheer gedecentraliseerd, wat de beveiliging en schaalbaarheid bemoeilijkt.', incorrect: 'Incorrect. P2P netwerken zijn juist goedkoop en eenvoudig op te zetten, maar dit gaat ten koste van centraal beheer en veiligheid.' },
+            'q3': { correct: 'Correct! Een router is een intermediary device dat netwerken met elkaar verbindt. Laptops, printers en smartphones zijn end devices.', incorrect: 'Incorrect. End devices zijn de bron of bestemming van data, zoals een laptop. Intermediary devices verbinden deze end devices, zoals een router of switch.' },
+            'q4': { correct: 'Correct! Een WAN verbindt netwerken over grote afstanden, zoals het internet dat verschillende LANs wereldwijd verbindt.', incorrect: 'Incorrect. Een netwerk binnen één gebouw is een LAN. Een privénetwerk is een Intranet. Een WAN gaat over de geografische reikwijdte.' },
+            'q5': { correct: 'Correct! Quality of Service (QoS) is het mechanisme dat wordt gebruikt om verkeer te prioriteren en een betrouwbare levering van kritieke applicaties te garanderen.', incorrect: 'Incorrect. Fault Tolerance gaat over redundantie, Scalability over groei en Security over beveiliging. QoS gaat specifiek over het prioriteren van verkeer.' },
+            'q6': { correct: 'Correct! De `#` prompt geeft aan dat je in Privileged EXEC Mode bent, waar je toegang hebt tot alle configuratie- en beheerscommando\'s.', incorrect: 'Incorrect. User EXEC mode heeft een `>` prompt. De andere modi hebben `(config)#` of een specifiekere sub-configuratie prompt.' },
+            'q7': { correct: 'Correct! Dit commando kopieert de actieve configuratie (running-config) naar het niet-vluchtige geheugen (startup-config).', incorrect: 'Incorrect. `show running-config` toont alleen de configuratie. `reload` herstart het apparaat, wat wijzigingen juist weggooit als ze niet zijn opgeslagen.' },
+            'q8': { correct: 'Correct! Het `service password-encryption` commando in global config mode past een zwakke versleuteling toe op alle wachtwoorden die anders in platte tekst in de configuratie zouden staan.', incorrect: 'Incorrect. `enable secret` stelt een versleuteld wachtwoord in voor de privileged mode, maar versleutelt niet de andere wachtwoorden zoals die van de console.' },
+            'q9': { correct: 'Correct! De Netwerklaag is verantwoordelijk voor end-to-end pakketbezorging, inclusief logische adressering (IP) en routing.', incorrect: 'Incorrect. Layer 2 (Data Link) gebruikt fysieke (MAC) adressen. Layer 4 (Transport) beheert de communicatie tussen processen.' },
+            'q10': { correct: 'Correct! Op de Transportlaag wordt data opgedeeld in Segmenten (als TCP wordt gebruikt) of Datagrams (als UDP wordt gebruikt).', incorrect: 'Incorrect. Een Frame is de PDU van de Data Link laag en een Packet is de PDU van de Netwerklaag.' },
+            'q11': { correct: 'Correct! Een MAC-adres is een Layer 2 adres dat wordt gebruikt voor lokale communicatie. De destination MAC wordt in de frame header bij elke router-hop vervangen door die van de volgende hop.', incorrect: 'Incorrect. Een IP-adres (Layer 3) blijft ongewijzigd van bron tot bestemming en is logisch.' },
+            'q12': { correct: 'Correct! Omdat glasvezel lichtpulsen gebruikt in plaats van elektrische signalen, is het volledig immuun voor EMI en RFI.', incorrect: 'Incorrect. Alle koperen kabels (UTP, STP, Coax) zijn in zekere mate gevoelig voor elektrische en radio-interferentie.' },
+            'q13': { correct: 'Correct! Goodput is de meest realistische meting van de bruikbare data die wordt overgedragen, omdat het rekening houdt met de overhead van protocol headers.', incorrect: 'Incorrect. Throughput is de totale overgedragen data (inclusief overhead). Bandwidth is de theoretische maximumsnelheid.' },
+            'q14': { correct: 'Correct! De berekening is: 128 + 0 + 32 + 16 + 0 + 4 + 0 + 1 = 181.', incorrect: 'Incorrect. Vergeet niet de waardes van elke bitpositie op te tellen: 128, 64, 32, 16, 8, 4, 2, 1.' },
+            'q15': { correct: 'Correct! Hexadecimaal (Base-16) wordt gebruikt omdat het een zeer compacte manier is om de lange 128-bit IPv6-adressen weer te geven.', incorrect: 'Incorrect. IPv4 wordt decimaal weergegeven. Binair is de basis, maar is te lang om leesbaar te zijn.' },
+            'q16': { correct: 'Correct! `1101` is 13, wat hex `D` is. `0011` is 3, wat hex `3` is. Samen is dat D3.', incorrect: 'Incorrect. Verdeel het binaire getal in twee groepen van vier (`1101` en `0011`) en converteer elke groep afzonderlijk.' },
+            'q17': { correct: 'Correct! De MAC-sublaag is verantwoordelijk voor de fysieke adressering (MAC-adressen) en het controleren van de toegang tot de media.', incorrect: 'Incorrect. De LLC-sublaag identificeert het protocol van de bovenliggende netwerklaag.'},
+            'q18': { correct: 'Correct! Draadloze netwerken gebruiken CSMA/CA (Carrier Sense Multiple Access with Collision Avoidance), een contention-based methode waarbij apparaten proberen botsingen te vermijden.', incorrect: 'Incorrect. Controlled access methoden zoals Token Ring zijn verouderd en worden niet gebruikt in moderne Wi-Fi netwerken.'},
+            'q19': { correct: 'Correct! Dit proces wordt "flooding" genoemd. De switch weet niet waar de bestemming is en stuurt het frame daarom naar iedereen, in de hoop dat de juiste host het oppikt en antwoordt.', incorrect: 'Incorrect. De switch gooit het frame niet weg, tenzij het corrupt is. Het is de taak van de switch om te proberen het frame af te leveren.'},
+            'q20': { correct: 'Correct! Cut-Through switching leest alleen het bestemmings-MAC-adres en stuurt het frame onmiddellijk door, wat resulteert in de laagste vertraging (latency).', incorrect: 'Incorrect. Store-and-Forward heeft een hogere latency omdat het het hele frame controleert op fouten voordat het wordt doorgestuurd.'},
+            'q21': { correct: 'Correct! Een duplex mismatch (één kant full, andere kant half) is de meest voorkomende oorzaak van collisions op een switchpoort. De full-duplex kant stuurt wanneer hij wil, wat collisions veroorzaakt voor de half-duplex kant.', incorrect: 'Incorrect. Een verkeerd IP-adres of een te lange kabel veroorzaken andere problemen, maar zijn niet de directe oorzaak van collisions op een switchpoort.'},
+            'q22': { correct: 'Correct! IP is "best effort", wat betekent dat het zijn best doet om een pakket af te leveren, maar er is geen ingebouwde garantie. Betrouwbaarheid is de taak van een protocol op een hogere laag, zoals TCP.', incorrect: 'Incorrect. IP is per definitie onbetrouwbaar en verbindingsloos.'},
+            'q23': { correct: 'Correct! Elke router verlaagt de TTL-waarde met 1. Als de TTL 0 bereikt, wordt het pakket verwijderd om te voorkomen dat het oneindig rond blijft gaan in een routing lus.', incorrect: 'Incorrect. Het verhogen van de TTL zou geen doel dienen. Het is een mechanisme om de levensduur van een pakket te beperken.'},
+            'q24': { correct: 'Correct! De host ziet dat het bestemmings-IP-adres (192.168.2.100) zich in een ander subnet bevindt dan zijn eigen subnet (192.168.1.0/24). Daarom moet het pakket naar de router (default gateway) worden gestuurd om te worden doorgestuurd.', incorrect: 'Incorrect. De host kan niet direct communiceren met een host op een ander netwerk; daar is een router voor nodig.'},
+            'q25': { correct: 'Correct! Een ARP Request wordt als een Layer 2 broadcast verzonden, zodat alle apparaten op het lokale netwerk het verzoek ontvangen en het apparaat met het gezochte IP-adres kan antwoorden.', incorrect: 'Incorrect. Het is geen unicast, omdat het bestemmings-MAC-adres nog onbekend is. De ARP Reply is wel een unicast.'},
+            'q26': { correct: 'Correct! Neighbor Discovery (ND), met zijn Neighbor Solicitation (NS) en Neighbor Advertisement (NA) berichten, vervult de rol van ARP in IPv6-netwerken.', incorrect: 'Incorrect. SLAAC en DHCPv6 zijn methoden voor adresconfiguratie, niet voor adresresolutie op de data link laag.'},
+            'q27': { correct: 'Correct! Router- en switchinterfaces zijn standaard administratief uitgeschakeld ("shutdown"). Het `no shutdown` commando in de interfaceconfiguratiemodus activeert de interface.', incorrect: 'Incorrect. `shutdown` doet het tegenovergestelde. `enable` wordt gebruikt om naar privileged mode te gaan.'},
+            'q28': { correct: 'Correct! `show ip interface brief` geeft een duidelijke, eenregelige samenvatting per interface met IP-adres, status en protocolstatus.', incorrect: 'Incorrect. `show interfaces` is te gedetailleerd voor een snel overzicht. `show ip route` toont de routingtabel, niet de interfacestatus.'},
+            'q29': { correct: 'Correct! De RFC 1918 range voor Class B is 172.16.0.0 tot 172.31.255.255. 172.20.10.5 valt binnen deze range.', incorrect: 'Incorrect. 172.32.x.x valt buiten de privé-range. 192.169.x.x is publiek (privé is alleen 192.168.x.x). 11.x.x.x is een publiek adres.'},
+            'q30': { correct: 'Correct! Voor een /24 (255.255.255.0) netwerk zijn de laatste 8 bits de host-bits. Het broadcastadres wordt gevormd door al deze host-bits op 1 te zetten, wat resulteert in .255 in het laatste octet.', incorrect: 'Incorrect. .0 is het netwerkadres. .255 is de broadcast. De andere zijn host-adressen.'},
+            'q31': { correct: 'Correct! Een /27 prefix laat 32-27 = 5 bits over voor hosts. De formule voor het aantal hosts is 2^h - 2 (waarbij h het aantal host-bits is). Dus, 2^5 - 2 = 32 - 2 = 30 bruikbare adressen.', incorrect: 'Incorrect. Reken het aantal host-bits uit (32 - prefixlengte) en gebruik de formule 2^h - 2.'},
+            'q32': { correct: 'Correct! De twee segmenten `0000` worden een `::`. De leidende nullen in `0db8` en `00ab` worden verwijderd. Je mag de dubbele punt maar één keer gebruiken voor de langste reeks nullen.', incorrect: 'Incorrect. Je mag de dubbele punt (::) maar één keer gebruiken. `2001:db8::ab::1234` is daarom ongeldig.'},
+            'q33': { correct: 'Correct! Een LLA (beginnend met FE80::) is ontworpen voor communicatie binnen een enkel netwerksegment (link) en wordt niet gerouteerd.', incorrect: 'Incorrect. Voor communicatie met het internet is een Global Unicast Address (GUA) nodig.'},
+            'q34': { correct: 'Correct! Traceroute verhoogt stapsgewijs de TTL-waarde om elke router op het pad een "Time Exceeded" bericht te laten sturen, waardoor het pad zichtbaar wordt.', incorrect: 'Incorrect. Ping gebruikt Echo Request/Reply om de bereikbaarheid van een eindpunt te testen, niet het pad ernaartoe.'},
+            'q35': { correct: 'Correct! Een Router Advertisement (RA) bericht wordt door routers verzonden om hun aanwezigheid kenbaar te maken en IPv6-configuratie-informatie te verstrekken aan hosts.', incorrect: 'Incorrect. Een RS is het verzoek van een host om een RA. NS en NA worden gebruikt voor MAC-adresresolutie.'},
+            'q36': { correct: 'Correct! VoIP en streaming video kunnen een klein beetje pakketverlies verdragen, maar vereisen een lage vertraging (latency). De snelheid en lage overhead van UDP zijn hier ideaal voor.', incorrect: 'Incorrect. Webpagina\'s, e-mail en FTP vereisen betrouwbare, volledige dataoverdracht, wat de specialiteit is van TCP.'},
+            'q37': { correct: 'Correct! De client initieert met SYN, de server antwoordt met SYN-ACK, en de client bevestigt met ACK.', incorrect: 'Incorrect. Dit is de vaste en logische volgorde om een betrouwbare tweewegsverbinding op te bouwen.'},
+            'q38': { correct: 'Correct! DNS (Domain Name System) is het "telefoonboek" van het internet en vertaalt voor mensen leesbare domeinnamen naar machineleesbare IP-adressen.', incorrect: 'Incorrect. DHCP deelt IP-adressen uit, HTTP haalt webpagina\'s op en SMTP verstuurt e-mail.'},
+            'q39': { correct: 'Correct! Dit is het fundamentele verschil. IMAP is moderner en handiger voor gebruikers met meerdere apparaten omdat alles gesynchroniseerd blijft op de server.', incorrect: 'Incorrect. POP3 is een ouder protocol dat is ontworpen voor een tijd waarin men vanaf één computer mailde en opslagruimte op servers schaars was.'},
+            'q40': { correct: 'Correct! Een worm is uniek omdat hij zich autonoom kan verspreiden door netwerkkwetsbaarheden te exploiteren, zonder dat een gebruiker op iets hoeft te klikken.', incorrect: 'Incorrect. Een virus heeft een host-bestand en een menselijke actie nodig om zich te verspreiden.'},
+            'q41': { correct: 'Correct! Verkenningsaanvallen zijn de eerste fase waarbij een aanvaller informatie verzamelt. Tools als ping en nslookup zijn hier perfect voor.', incorrect: 'Incorrect. Een Access attack is het daadwerkelijk proberen binnen te dringen. Een DoS-aanval is gericht op het verstoren van een dienst.'},
+            'q42': { correct: 'Correct! Een IP-adres in de range 169.254.0.0/16 is een APIPA-adres. Dit adres wordt door een Windows-pc zelf toegewezen als deze geen antwoord krijgt van een DHCP-server.', incorrect: 'Incorrect. Hoewel een losse kabel ook tot dit probleem kan leiden, is de meest specifieke oorzaak voor dít specifieke IP-adres het onvermogen om de DHCP-server te bereiken.'},
+            'q43': { correct: 'Correct! Als je een site via IP kunt bereiken, werken de netwerk-, transport- en applicatielagen (voor de webserver zelf). Het falen van de domeinnaam wijst direct op een probleem met de DNS-vertaling.', incorrect: 'Incorrect. Als de webserver offline was, zou je er ook niet via IP-adres op kunnen komen. Als de gateway onjuist was, zou je helemaal geen externe verbindingen kunnen maken.'},
+            'q44': { correct: 'Correct! Integriteit betekent dat de data ongewijzigd en correct is. Door het bedrag te veranderen, is de integriteit van de data geschonden.', incorrect: 'Incorrect. Vertrouwelijkheid zou geschonden zijn als de hacker de transactie had ingezien (wat ook is gebeurd, maar de *modificatie* is de integriteitsschending). Beschikbaarheid zou geschonden zijn als de transactie was geblokkeerd.'},
+            'q45': { correct: 'Correct! Alleen de eigenaar van de private sleutel kan de hash versleutelen. Omdat iedereen de bijbehorende publieke sleutel kan gebruiken om het te ontsleutelen, bewijst een succesvolle ontsleuteling dat de afzender de eigenaar van die private sleutel moet zijn.', incorrect: 'Incorrect. Het versleutelen van de hele boodschap is voor vertrouwelijkheid, niet voor authenticatie. Het versleutelen van de hash is de kern van een digitale handtekening.'},
+            'q46': { correct: 'Correct! De CA fungeert als een vertrouwde notaris voor de digitale wereld. Ze controleren de identiteit en certificeren dat een bepaalde publieke sleutel daadwerkelijk bij die identiteit hoort.', incorrect: 'Incorrect. Een CA is een management-entiteit in een PKI, geen firewall of encryptie-apparaat voor verkeer.'}
+        };
+
+        function getExplanation(questionBlock) {
+            const questionId = questionBlock.querySelector('.options-container').id.replace('-options', '');
+            return explanations[questionId] || { correct: 'Goed gedaan!', incorrect: 'Probeer het opnieuw.' };
+        }
+    </script>
+
+</body>
+</html>
