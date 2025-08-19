@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCNAv7: ITN Flashcards</title>
+    <style>
+        :root {
+            --primary-color: #005073;
+            --secondary-color: #f0f0f0;
+            --accent-color: #1089ff;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --shadow-color: rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 5px solid var(--accent-color);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        #homepage {
+            text-align: center;
+            padding: 40px 20px;
+            background: var(--card-bg);
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+
+        #homepage h2 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        .deck-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .deck-link {
+            display: block;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 20px 30px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .deck-link:hover {
+            transform: translateY(-5px);
+            background-color: #007ae5;
+        }
+
+        .module-section {
+            padding-top: 70px;
+            margin-bottom: 40px;
+        }
+        
+        .module-section h2 {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--accent-color);
+            padding-bottom: 10px;
+            font-size: 2rem;
+        }
+
+        .flashcard-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .flashcard {
+            background-color: transparent;
+            perspective: 1000px;
+            height: 250px;
+            cursor: pointer;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 8px 0 var(--shadow-color);
+            border-radius: 10px;
+        }
+
+        .flashcard.is-flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+            border-radius: 10px;
+        }
+
+        .card-front {
+            background-color: var(--card-bg);
+            border: 1px solid #ddd;
+        }
+        
+        .card-front h3 {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+
+        .card-back {
+            background-color: var(--accent-color);
+            color: white;
+            transform: rotateY(180deg);
+            font-size: 1rem;
+            overflow-y: auto; /* Belangrijk voor scrollen bij lange tekst! */
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+        
+        .card-back p, .card-back ul {
+            text-align: left;
+            margin: 0;
+            width: 100%;
+        }
+        
+        .card-back ul {
+            padding-left: 20px;
+        }
+
+        /* --- NIEUWE MODAL STYLES --- */
+        #modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none; /* Standaard verborgen */
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        #modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            width: 90%;
+            max-width: 600px;
+        }
+
+        /* Stijlen voor de vergrote kaart in de modal */
+        .modal-content .flashcard {
+            height: 400px; /* Meer ruimte voor tekst */
+            cursor: default; /* Geen handje meer voor de container */
+        }
+        
+        .modal-content .card-inner {
+            cursor: pointer; /* Wel een handje voor de kaart zelf om te flippen */
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            background: var(--primary-color);
+            color: white;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>CCNAv7: Introduction to Networks</h1>
+        <p>Flashcards voor de Toets</p>
+    </header>
+
+    <div class="container">
+        <!-- VOLLEDIG VERNIEUWDE HOMEPAGE SECTIE -->
+        <section id="homepage">
+            <h2>Selecteer een Module</h2>
+            <div class="deck-grid">
+                <a href="#module1" class="deck-link">Module 1: Networking Today</a>
+                <a href="#module2" class="deck-link">Module 2: Basic Switch and End Device Configuration</a>
+                <a href="#module3" class="deck-link">Module 3: Protocols and Models</a>
+                <a href="#module4" class="deck-link">Module 4: Physical Layer</a>
+                <a href="#module5" class="deck-link">Module 5: Number Systems</a>
+                <a href="#module6" class="deck-link">Module 6: Data Link Layer</a>
+                <a href="#module7" class="deck-link">Module 7: Ethernet Switching</a>
+                <a href="#module8" class="deck-link">Module 8: Network Layer</a>
+                <a href="#module9" class="deck-link">Module 9: Address Resolution</a>
+                <a href="#module10" class="deck-link">Module 10: Basic Router Configuration</a>
+                <a href="#module11" class="deck-link">Module 11: IPv4 Addressing</a>
+                <a href="#module12" class="deck-link">Module 12: IPv6 Addressing</a>
+                <a href="#module13" class="deck-link">Module 13: ICMP</a>
+                <a href="#module14" class="deck-link">Module 14: Transport Layer</a>
+                <a href="#module15" class="deck-link">Module 15: Application Layer</a>
+                <a href="#module16" class="deck-link">Module 16: Network Security Fundamentals</a>
+                <a href="#module17" class="deck-link">Module 17: Build a Small Network</a>
+                <a href="#module_extra" class="deck-link">Extra: Beveiligingsconcepten (BIV, Crypto)</a>
+            </div>
+        </section>
+
+<!-- Module 1 Flashcards -->
+        <section id="module1" class="module-section">
+            <h2>Module 1: Networking Today</h2>
+            <div class="flashcard-container">
+                <!-- Card 1.1 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is de rol van een 'host' en wat zijn de twee hoofdrollen?</h3></div>
+                        <div class="card-back">
+                            <p>Elke computer op een netwerk wordt een host of eindapparaat genoemd.<br><br><b>Rollen:</b><br>1. <b>Client:</b> Een computer die informatie opvraagt (bv. een webpagina).<br>2. <b>Server:</b> Een computer die informatie levert aan eindapparaten (bv. een webserver, e-mailserver, file server).</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 1.2 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is een Peer-to-Peer (P2P) netwerk? Noem voor- en nadelen.</h3></div>
+                        <div class="card-back">
+                            <p>Een P2P-netwerk is waar apparaten tegelijkertijd client en server kunnen zijn, zonder centrale server.<br><br><b>Voordelen:</b><br>- Eenvoudig op te zetten<br>- Minder complex<br>- Lagere kosten<br><br><b>Nadelen:</b><br>- Geen gecentraliseerd beheer<br>- Minder veilig<br>- Niet schaalbaar<br>- Lagere prestaties</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 1.3 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is de functie van 'intermediary network devices'?</h3></div>
+                        <div class="card-back">
+                            <p>Deze apparaten verbinden eindapparaten met elkaar en managen data door het netwerk. <br><br><b>Functies:</b><br>1. Regenereren en opnieuw versturen van datasignalen.<br>2. Bijhouden van paden door het netwerk.<br>3. Informeren van andere apparaten over fouten en communicatiestoringen.<br><i>Voorbeelden: Switches, Routers, Firewalls.</i></p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 1.4 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Welke drie hoofdtypen netwerkmedia zijn er?</h3></div>
+                        <div class="card-back">
+                            <p>1. <b>Koper (Metal wires):</b> Gebruikt elektrische impulsen om data te versturen.<br>2. <b>Glasvezel (Fiber-optic):</b> Gebruikt lichtpulsen om data te versturen.<br>3. <b>Draadloos (Wireless):</b> Gebruikt elektromagnetische golven (radiogolven) om data te versturen.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 1.5 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is het verschil tussen een fysieke en een logische topologie?</h3></div>
+                        <div class="card-back">
+                            <p><b>Fysieke Topologie:</b> Illustreert de fysieke locatie van apparaten en de kabelinstallatie. (Waar de apparaten en kabels *zijn*).<br><br><b>Logische Topologie:</b> Illustreert de apparaten, poorten en het adresseringsschema van het netwerk. (Hoe de apparaten *communiceren*).</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 1.6 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is het verschil tussen een LAN en een WAN?</h3></div>
+                        <div class="card-back">
+                            <p><b>LAN (Local Area Network):</b> Een netwerkinfrastructuur over een klein geografisch gebied (één gebouw, één organisatie). Biedt hoge snelheid.<br><br><b>WAN (Wide Area Network):</b> Een netwerkinfrastructuur over een groot geografisch gebied. Verbindt LAN's met elkaar. Wordt beheerd door service providers en heeft lagere snelheden dan LAN's.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 1.7 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is het verschil tussen het Internet, een Intranet en een Extranet?</h3></div>
+                        <div class="card-back">
+                            <p><b>Internet:</b> Een wereldwijde verzameling van onderling verbonden LAN's en WAN's.<br><br><b>Intranet:</b> Een privéverzameling van LAN's en WAN's binnen een organisatie, alleen toegankelijk voor leden.<br><br><b>Extranet:</b> Biedt veilige toegang tot het netwerk van een organisatie voor externe individuen (bv. partners, leveranciers).</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 1.8 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Noem de vier basisvereisten voor een betrouwbaar netwerk.</h3></div>
+                        <div class="card-back">
+                            <p>1. <b>Fouttolerantie (Fault Tolerance):</b> Het netwerk beperkt de impact van een storing en heeft meerdere paden (redundantie).<br>2. <b>Schaalbaarheid (Scalability):</b> Het netwerk kan gemakkelijk uitbreiden zonder de prestaties voor bestaande gebruikers te beïnvloeden.<br>3. <b>Quality of Service (QoS):</b> Prioriteit geven aan bepaald verkeer (bv. voice en video) boven ander verkeer.<br>4. <b>Beveiliging (Security):</b> Beschermen van de infrastructuur en data tegen ongeautoriseerde toegang (Confidentiality, Integrity, Availability).</p>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Card 1.9 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat houden de drie doelen van netwerkbeveiliging in? (CIA-triad)</h3></div>
+                        <div class="card-back">
+                            <p><b>1. Confidentiality (Vertrouwelijkheid):</b> Zorgen dat data alleen door de bedoelde ontvangers gelezen kan worden.<br>
+                            <b>2. Integrity (Integriteit):</b> De zekerheid dat de data niet is gewijzigd tijdens de overdracht.<br>
+                            <b>3. Availability (Beschikbaarheid):</b> De zekerheid van tijdige en betrouwbare toegang tot data voor geautoriseerde gebruikers.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 1.10 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat zijn de recente netwerktrends die organisaties beïnvloeden?</h3></div>
+                        <div class="card-back">
+                            <ul>
+                                <li><b>Bring Your Own Device (BYOD):</b> Medewerkers gebruiken hun eigen apparaten op het bedrijfsnetwerk.</li>
+                                <li><b>Online Collaboration:</b> Samenwerken op afstand via tools zoals Cisco WebEx.</li>
+                                <li><b>Video Communications:</b> Video wordt een cruciale tool voor communicatie.</li>
+                                <li><b>Cloud Computing:</b> Opslag en applicaties worden via het internet benaderd vanuit datacenters.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Module 2 Flashcards -->
+        <section id="module2" class="module-section">
+            <h2>Module 2: Basic Switch and End Device Configuration</h2>
+            <div class="flashcard-container">
+                <!-- Card 2.1 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat zijn de drie hoofdcomponenten van een besturingssysteem (OS)?</h3></div>
+                        <div class="card-back">
+                            <p>1. <b>Shell:</b> De gebruikersinterface die gebruikers in staat stelt taken aan te vragen. Kan een CLI (Command-Line Interface) of GUI (Graphical User Interface) zijn.<br>2. <b>Kernel:</b> Communiceert tussen hardware en software en beheert hoe hardwarebronnen worden gebruikt.<br>3. <b>Hardware:</b> Het fysieke deel van een computer.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 2.2 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Noem de drie manieren om toegang te krijgen tot de Cisco IOS CLI.</h3></div>
+                        <div class="card-back">
+                            <p>1. <b>Console:</b> Een fysieke beheerpoort die directe toegang geeft via een consolekabel. Wordt gebruikt voor de initiële configuratie.<br>2. <b>Secure Shell (SSH):</b> Een veilige, versleutelde methode om op afstand toegang te krijgen tot de CLI via het netwerk.<br>3. <b>Telnet:</b> Een onveilige, onversleutelde methode voor externe CLI-toegang. Wachtwoorden en commando's worden als platte tekst verzonden.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 2.3 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat zijn de twee primaire command modes in Cisco IOS?</h3></div>
+                        <div class="card-back">
+                            <p>1. <b>User EXEC Mode:</b><br>- Prompt eindigt met `>` (e.g., `Switch>`).<br>- Biedt beperkte toegang tot basis monitoring commando's.<br>- Wordt ook wel "view-only" modus genoemd.<br><br>2. <b>Privileged EXEC Mode:</b><br>- Prompt eindigt met `#` (e.g., `Switch#`).<br>- Biedt toegang tot alle commando's en features.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 2.4 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Hoe navigeer je tussen User EXEC en Privileged EXEC mode?</h3></div>
+                        <div class="card-back">
+                            <p><b>Van User EXEC naar Privileged EXEC:</b><br>Gebruik het `enable` commando.<br>`Switch> enable`<br>`Switch#`<br><br><b>Van Privileged EXEC terug naar User EXEC:</b><br>Gebruik het `disable` commando.<br>`Switch# disable`<br>`Switch>`</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 2.5 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is de Global Configuration Mode en hoe kom je er?</h3></div>
+                        <div class="card-back">
+                            <p>De modus waarin je wijzigingen kunt aanbrengen in de configuratie van het apparaat.<br><br><b>Hoe kom je er (vanuit Privileged EXEC):</b><br>Gebruik het `configure terminal` commando.<br>`Switch# configure terminal`<br>`Switch(config)#`<br><br><b>Hoe ga je terug:</b><br>Gebruik `exit` om één niveau terug te gaan, of `end` / `Ctrl+Z` om direct terug te keren naar Privileged EXEC mode.</p>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Card 2.6 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is de basisstructuur van een IOS-commando?</h3></div>
+                        <div class="card-back">
+                            <p>De structuur is: `Prompt Command {Keyword | Argument}`<br><br><b>Voorbeeld 1:</b> `Switch> show ip protocols`<br>- `show`: Command<br>- `ip protocols`: Keyword<br><br><b>Voorbeeld 2:</b> `Switch> ping 192.168.10.5`<br>- `ping`: Command<br>- `192.168.10.5`: Argument (een door de gebruiker gedefinieerde waarde).</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 2.7 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Welke twee typen configuratiebestanden zijn er op een Cisco-apparaat?</h3></div>
+                        <div class="card-back">
+                            <p>1. <b>running-config:</b><br>- Opgeslagen in RAM (vluchtig geheugen).<br>- Bevat de huidige, actieve configuratie.<br>- Wijzigingen hierin hebben direct effect.<br>- Gaat verloren bij een herstart.<br><br>2. <b>startup-config:</b><br>- Opgeslagen in NVRAM (niet-vluchtig geheugen).<br>- Wordt geladen wanneer het apparaat opstart.<br>- Om wijzigingen permanent te maken, moet de `running-config` hiernaar worden gekopieerd.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 2.8 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Welk commando gebruik je om de actieve configuratie op te slaan?</h3></div>
+                        <div class="card-back">
+                            <p>Om de wijzigingen van de `running-config` op te slaan naar de `startup-config`, gebruik je in Privileged EXEC mode het commando:<br><br>`Switch# copy running-config startup-config`</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 2.9 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat zijn de basisstappen om een switch te configureren?</h3></div>
+                        <div class="card-back">
+                            <ol>
+                                <li><b>Geef een unieke hostname:</b> `hostname [naam]`</li>
+                                <li><b>Beveilig User EXEC mode:</b> `line console 0`, `password [wachtwoord]`, `login`</li>
+                                <li><b>Beveilig Privileged EXEC mode:</b> `enable secret [wachtwoord]`</li>
+                                <li><b>Beveilig remote toegang (VTY):</b> `line vty 0 15`, `password [wachtwoord]`, `login`</li>
+                                <li><b>Versleutel alle platte-tekst wachtwoorden:</b> `service password-encryption`</li>
+                                <li><b>Maak een waarschuwingsbanner:</b> `banner motd #bericht#`</li>
+                                <li><b>Sla de configuratie op:</b> `copy running-config startup-config`</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Module 3 Flashcards -->
+        <section id="module3" class="module-section">
+            <h2>Module 3: Protocols and Models</h2>
+            <div class="flashcard-container">
+                <!-- Card 3.1 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Waarom zijn protocollen essentieel voor netwerkcommunicatie?</h3></div>
+                        <div class="card-back">
+                            <p>Protocollen zijn de regels die de communicatie sturen. Ze zorgen ervoor dat apparaten elkaar begrijpen, ongeacht de fabrikant.<br><br>Ze definiëren onder andere:<br>- Message encoding, formatting & encapsulation<br>- Message size & timing<br>- Message delivery options</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 3.2 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is het OSI-referentiemodel? Noem de 7 lagen.</h3></div>
+                        <div class="card-back">
+                            <p>Het OSI-model is een conceptueel model dat de functies van een netwerksysteem in 7 lagen verdeelt.<br><br>7. Application<br>6. Presentation<br>5. Session<br>4. Transport<br>3. Network<br>2. Data Link<br>1. Physical</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 3.3 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is het TCP/IP-model? Noem de 4 lagen.</h3></div>
+                        <div class="card-back">
+                            <p>Het TCP/IP-model is een meer praktisch model dat de basis vormt voor het internet.<br><br>4. Application (combineert OSI lagen 5-7)<br>3. Transport<br>2. Internet<br>1. Network Access (combineert OSI lagen 1-2)</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 3.4 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is data-encapsulatie?</h3></div>
+                        <div class="card-back">
+                            <p>Het proces waarbij data door de lagen van een model naar beneden beweegt. Elke laag voegt zijn eigen header (en soms een trailer) met protocolinformatie toe aan de data van de laag erboven. Dit 'inpakkende' proces heet encapsulatie.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 3.5 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is een PDU? Noem de PDU's voor de TCP/IP-lagen.</h3></div>
+                        <div class="card-back">
+                            <p>Een PDU (Protocol Data Unit) is de naam voor een 'pakketje' data op een specifieke laag van een model.<br><br><b>TCP/IP Model PDU's:</b><br>- <b>Application:</b> Data<br>- <b>Transport:</b> Segment (TCP) of Datagram (UDP)<br>- <b>Internet:</b> Packet<br>- <b>Network Access:</b> Frame</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 3.6 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is het verschil tussen Layer 2 (MAC) en Layer 3 (IP) adressen?</h3></div>
+                        <div class="card-back">
+                            <p><b>Layer 2 Adres (MAC-adres):</b><br>- Fysiek adres, 'ingebrand' in de NIC.<br>- Wordt gebruikt voor communicatie binnen hetzelfde lokale netwerk (hop-to-hop).<br>- Verandert bij elke router die wordt gepasseerd.<br><br><b>Layer 3 Adres (IP-adres):</b><br>- Logisch adres, configureerbaar.<br>- Wordt gebruikt voor end-to-end communicatie over verschillende netwerken heen.<br>- Blijft hetzelfde van de originele bron tot de uiteindelijke bestemming.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Module 4 Flashcards -->
+        <section id="module4" class="module-section">
+            <h2>Module 4: Physical Layer</h2>
+            <div class="flashcard-container">
+                 <!-- Card 4.1 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is de primaire functie van de Fysieke Laag (Layer 1)?</h3></div>
+                        <div class="card-back">
+                            <p>De Fysieke Laag is verantwoordelijk voor het transporteren van de bits (enen en nullen) die een Data Link-laag frame vormen over de netwerkmedia. Het accepteert een compleet frame van de Data Link-laag en codeert dit in een serie van signalen.</p>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Card 4.2 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Welke drie functionele gebieden adresseren de Fysieke Laag standaarden?</h3></div>
+                        <div class="card-back">
+                            <p>1. <b>Fysieke Componenten:</b> Hardware apparaten, media en connectoren (bv. NICs, kabels, poorten).<br>2. <b>Encoding:</b> Converteert de stroom van bits naar een formaat dat herkenbaar is voor het volgende apparaat.<br>3. <b>Signaling:</b> Hoe de '1' en '0' bits worden gerepresenteerd op de media (bv. als elektrische pulsen, lichtpulsen of radiogolven).</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 4.3 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is het verschil tussen Bandwidth, Throughput en Goodput?</h3></div>
+                        <div class="card-back">
+                            <p><b>Bandwidth (Bandbreedte):</b> De theoretische maximale capaciteit van een medium om data te dragen.<br><br><b>Throughput (Doorvoersnelheid):</b> De daadwerkelijke, gemeten overdracht van bits over een medium gedurende een bepaalde periode.<br><br><b>Goodput:</b> De doorvoersnelheid minus de protocol overhead. Het meet de bruikbare data die is overgedragen.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 4.4 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Noem de drie hoofdtypen koperen bekabeling.</h3></div>
+                        <div class="card-back">
+                            <p>1. <b>Unshielded Twisted-Pair (UTP):</b> Meest voorkomende netwerkkabel. De gedraaide paren helpen tegen interferentie.<br>2. <b>Shielded Twisted-Pair (STP):</b> Heeft een extra metalen afscherming voor betere bescherming tegen EMI/RFI, maar is duurder en moeilijker te installeren.<br>3. <b>Coaxial (Coax):</b> Gebruikt voor kabelinternet en het verbinden van antennes.</p>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Card 4.5 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is het verschil tussen Single-mode en Multi-mode glasvezel?</h3></div>
+                        <div class="card-back">
+                            <p><b>Single-mode Fiber (SMF):</b><br>- Zeer kleine kern.<br>- Gebruikt dure lasers.<br>- Geschikt voor lange afstanden (long-haul).<br>- Minder dispersie (signaalverlies).<br><br><b>Multi-mode Fiber (MMF):</b><br>- Grotere kern.<br>- Gebruikt goedkopere LEDs.<br>- Geschikt voor kortere afstanden (binnen een gebouw).<br>- Meer dispersie.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 4.6 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat zijn de belangrijkste beperkingen van draadloze media?</h3></div>
+                        <div class="card-back">
+                            <p><b>1. Coverage area (Dekkingsgebied):</b> Kan significant beïnvloed worden door fysieke obstakels.<br><b>2. Interference (Interferentie):</b> Gevoelig voor storing van andere draadloze apparaten (magnetrons, telefoons).<br><b>3. Security (Beveiliging):</b> Iedereen binnen bereik kan het signaal potentieel onderscheppen.<br><b>4. Shared medium:</b> Werkt in half-duplex; bandbreedte wordt gedeeld door alle gebruikers, wat de snelheid per gebruiker vermindert.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Module 5 Flashcards -->
+        <section id="module5" class="module-section">
+            <h2>Module 5: Number Systems</h2>
+            <div class="flashcard-container">
+                 <!-- Card 5.1 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is het binaire getallenstelsel en waarom is het belangrijk voor computers?</h3></div>
+                        <div class="card-back">
+                            <p>Het binaire stelsel is een base-2 getallenstelsel. Het gebruikt alleen de cijfers 0 en 1, die 'bits' worden genoemd.<br><br>Het is belangrijk omdat computers en netwerkapparatuur digitaal werken met elektrische signalen die 'aan' (1) of 'uit' (0) zijn. Alle communicatie wordt uiteindelijk vertaald naar deze binaire code.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 5.2 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is 'positional notation' (positionele notatie)?</h3></div>
+                        <div class="card-back">
+                            <p>Positionele notatie betekent dat een cijfer een andere waarde vertegenwoordigt afhankelijk van zijn "positie" in het getal.<br><br><b>Decimaal (base-10):</b> In het getal 123 is de '1' 1x100, de '2' 2x10 en de '3' 3x1.<br><br><b>Binair (base-2):</b> In het getal 1101 is de eerste '1' 1x8, de tweede '1' 1x4, de '0' 0x2 en de laatste '1' 1x1.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 5.3 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Hoe converteer je het binaire getal `11000000` naar decimaal?</h3></div>
+                        <div class="card-back">
+                            <p>Je telt de waardes van de posities waar een '1' staat bij elkaar op.<br>Posities (van rechts naar links): 1, 2, 4, 8, 16, 32, 64, 128.<br><br>`11000000`<br>= (1 * 128) + (1 * 64) + (0 * 32) + (0 * 16) + (0 * 8) + (0 * 4) + (0 * 2) + (0 * 1)<br>= 128 + 64<br>= <b>192</b></p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 5.4 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Hoe converteer je het decimale getal `168` naar binair?</h3></div>
+                        <div class="card-back">
+                            <p>Begin met de hoogste positionele waarde (128) en werk naar beneden.<br>1. Is 168 >= 128? <b>Ja</b>. Binair = <b>1</b>. Over: 168-128 = 40.<br>2. Is 40 >= 64? <b>Nee</b>. Binair = 1<b>0</b>.<br>3. Is 40 >= 32? <b>Ja</b>. Binair = 10<b>1</b>. Over: 40-32 = 8.<br>4. Is 8 >= 16? <b>Nee</b>. Binair = 101<b>0</b>.<br>5. Is 8 >= 8? <b>Ja</b>. Binair = 1010<b>1</b>. Over: 8-8 = 0.<br>6-8. Vul rest aan met nullen.<br>Resultaat: <b>10101000</b></p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 5.5 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is het hexadecimale getallenstelsel (base-16)?</h3></div>
+                        <div class="card-back">
+                            <p>Een base-16 stelsel dat de cijfers 0-9 en de letters A-F gebruikt.<br>- A = 10, B = 11, C = 12, D = 13, E = 14, F = 15.<br><br>Het wordt veel gebruikt om binaire getallen compacter weer te geven, omdat één hexadecimaal cijfer precies 4 binaire bits kan representeren (bv. F = 1111).</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 5.6 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Hoe worden MAC-adressen en IPv6-adressen gerepresenteerd?</h3></div>
+                        <div class="card-back">
+                            <p>Beide worden gerepresenteerd met hexadecimale getallen om ze leesbaarder te maken dan lange binaire reeksen.<br><br><b>MAC-adres:</b> 48-bit adres, weergegeven als 12 hexadecimale cijfers (bv. 00-60-2F-3A-07-BC).<br><br><b>IPv6-adres:</b> 128-bit adres, weergegeven als 32 hexadecimale cijfers, verdeeld in 8 groepen van 4 (bv. 2001:0db8:acad:0001:0000:0000:0000:0001).</p>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Card 5.7 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Hoe converteer je de decimale waarde `168` naar hexadecimaal?</h3></div>
+                        <div class="card-back">
+                            <p><b>Stap 1: Converteer naar binair.</b><br>168 = `10101000`<br><br><b>Stap 2: Verdeel het binaire getal in groepen van 4 bits.</b><br>`1010` `1000`<br><br><b>Stap 3: Converteer elke 4-bit groep naar hexadecimaal.</b><br>- `1010` (8+2) = 10 = <b>A</b><br>- `1000` (8) = <b>8</b><br><br>Resultaat: <b>A8</b></p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 5.8 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Hoe converteer je de hexadecimale waarde `D2` naar decimaal?</h3></div>
+                        <div class="card-back">
+                           <p><b>Stap 1: Converteer elke hex-cijfer naar een 4-bit binair getal.</b><br>- D = 13 = `1101`<br>- 2 = 2 = `0010`<br><br><b>Stap 2: Combineer de binaire groepen.</b><br>`11010010`<br><br><b>Stap 3: Converteer het volledige binaire getal naar decimaal.</b><br>= 128 + 64 + 8 + 2<br>= <b>210</b></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Module 6 Flashcards -->
+        <section id="module6" class="module-section">
+            <h2>Module 6: Data Link Layer</h2>
+            <div class="flashcard-container">
+                <!-- Card 6.1 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is de primaire verantwoordelijkheid van de Data Link Laag (Layer 2)?</h3></div>
+                        <div class="card-back">
+                            <p>De Data Link Laag is verantwoordelijk voor communicatie tussen de netwerkkaarten (NIC's) van apparaten. Het staat protocollen uit hogere lagen toe om toegang te krijgen tot de fysieke media, het encapsuleert Layer 3 packets in Layer 2 frames, en voert foutdetectie uit.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 6.2 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Uit welke twee sublagen bestaat de Data Link Laag volgens de IEEE 802 standaard?</h3></div>
+                        <div class="card-back">
+                            <p>1. <b>Logical Link Control (LLC):</b> Communiceert met de netwerklaag (Layer 3) erboven. Plaatst informatie in het frame om aan te geven welk netwerklaagprotocol wordt gebruikt.<br><br>2. <b>Media Access Control (MAC):</b> Is verantwoordelijk voor data-encapsulatie, media access control (toegangscontrole tot de media) en het fysieke adresseren (MAC-adressen).</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 6.3 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Noem drie veelvoorkomende fysieke WAN-topologieën.</h3></div>
+                        <div class="card-back">
+                            <p>1. <b>Point-to-Point:</b> Een directe, permanente link tussen twee eindpunten. De eenvoudigste vorm.<br>2. <b>Hub and Spoke:</b> Een centrale site verbindt meerdere branch-sites via point-to-point links (vergelijkbaar met een ster-topologie).<br>3. <b>Mesh:</b> Biedt hoge beschikbaarheid doordat elk eindpunt met elk ander eindpunt is verbonden. Dit is complex en duur.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 6.4 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is het verschil tussen half-duplex en full-duplex communicatie?</h3></div>
+                        <div class="card-back">
+                            <p><b>Half-duplex:</b> Slechts één apparaat kan tegelijkertijd zenden of ontvangen op een gedeeld medium. Gebruikt in oude bus-topologieën en Wi-Fi.<br><br><b>Full-duplex:</b> Beide apparaten kunnen tegelijkertijd zenden en ontvangen op een gedeeld medium. Moderne Ethernet switches opereren in full-duplex mode.</p>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Card 6.5 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat zijn de twee methoden voor media-toegangscontrole (access control)?</h3></div>
+                        <div class="card-back">
+                            <p>1. <b>Contention-based access:</b> Alle nodes concurreren voor het gebruik van het medium (half-duplex). Voorbeelden: CSMA/CD voor oud Ethernet en CSMA/CA voor Wi-Fi.<br><br>2. <b>Controlled access:</b> Elke node heeft zijn eigen tijd om het medium te gebruiken (deterministisch). Voorbeeld: Token Ring.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 6.6 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Uit welke drie hoofdonderdelen bestaat een data link frame?</h3></div>
+                        <div class="card-back">
+                            <p>1. <b>Header:</b> Bevat controle-informatie zoals adressering (bron- en bestemmings-MAC).<br>2. <b>Data:</b> Bevat de payload van de bovenliggende laag (het IP-pakket).<br>3. <b>Trailer:</b> Bevat controle-informatie voor foutdetectie (Frame Check Sequence - FCS).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Module 7 Flashcards -->
+        <section id="module7" class="module-section">
+            <h2>Module 7: Ethernet Switching</h2>
+            <div class="flashcard-container">
+                <!-- Card 7.1 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Hoe is een Ethernet MAC-adres opgebouwd?</h3></div>
+                        <div class="card-back">
+                            <p>Een MAC-adres is een 48-bit adres, uitgedrukt in 12 hexadecimale cijfers.<br><br>Het bestaat uit twee delen:<br>1. <b>Organizationally Unique Identifier (OUI):</b> De eerste 6 hex-cijfers (24 bits), toegewezen door IEEE aan een fabrikant.<br>2. <b>Vendor Assigned:</b> De laatste 6 hex-cijfers (24 bits), uniek toegewezen door de fabrikant aan een specifieke NIC.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 7.2 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is het verschil tussen een unicast, broadcast en multicast MAC-adres?</h3></div>
+                        <div class="card-back">
+                            <p><b>Unicast:</b> Een uniek adres voor één specifieke NIC. Frame wordt van één bron naar één bestemming gestuurd.<br><b>Broadcast:</b> Een frame dat naar alle apparaten in het lokale netwerk (broadcast domain) wordt gestuurd. Het bestemmings-MAC is `FF-FF-FF-FF-FF-FF`.<br><b>Multicast:</b> Een frame dat naar een specifieke groep apparaten wordt gestuurd die zich hebben aangemeld voor die groep.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 7.3 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Hoe leert een switch en bouwt hij zijn MAC-adrestabel op?</h3></div>
+                        <div class="card-back">
+                            <p>Een switch leert door het <b>source MAC-adres</b> van elk inkomend frame te inspecteren.<br><br>Als het source MAC-adres nog niet in de tabel staat, voegt de switch het MAC-adres en de poort waarop het frame binnenkwam toe aan zijn MAC-adrestabel (ook wel CAM-tabel genoemd). Dit proces wordt 'learning' genoemd.</p>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Card 7.4 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Hoe stuurt een switch een frame door (forwarding)?</h3></div>
+                        <div class="card-back">
+                            <p>De switch kijkt naar het <b>destination MAC-adres</b> van het frame.<br><br>- Als het adres in de MAC-tabel staat, stuurt de switch het frame alleen door via de bijbehorende poort.<br>- Als het adres <b>niet</b> in de tabel staat (unknown unicast), stuurt de switch het frame door naar alle poorten, behalve de poort waar het op binnenkwam (flooding).</p>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Card 7.5 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is het verschil tussen Store-and-Forward en Cut-Through switching?</h3></div>
+                        <div class="card-back">
+                            <p><b>Store-and-Forward:</b> De switch ontvangt het <b>gehele</b> frame, controleert op fouten (CRC check), en stuurt het dan pas door. Het is betrouwbaar maar heeft een hogere latency.<br><br><b>Cut-Through:</b> De switch begint met doorsturen zodra het bestemmings-MAC-adres is gelezen, zonder het hele frame af te wachten. Het is sneller (lagere latency) maar kan corrupte frames doorsturen.</p>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Card 7.6 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is een 'duplex mismatch' en wat is het gevolg?</h3></div>
+                        <div class="card-back">
+                            <p>Een duplex mismatch treedt op wanneer de ene kant van een verbinding is ingesteld op <b>full-duplex</b> en de andere kant op <b>half-duplex</b>.<br><br>Het gevolg is zeer slechte prestaties met veel collisions, late collisions, en CRC-fouten, ook al lijkt de verbinding 'up' te zijn. Dit wordt vaak veroorzaakt door incorrecte autonegotiation of handmatige misconfiguratie.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Module 8 Flashcards -->
+        <section id="module8" class="module-section">
+            <h2>Module 8: Network Layer</h2>
+            <div class="flashcard-container">
+                <!-- Card 8.1 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat zijn de vier basistaken van de Netwerklaag (Layer 3)?</h3></div>
+                        <div class="card-back">
+                            <p>1. <b>Addressing end devices:</b> Apparaten voorzien van een uniek IP-adres.<br>2. <b>Encapsulation:</b> Het transportlaag-segment in een IP-pakket verpakken en een IP-header toevoegen.<br>3. <b>Routing:</b> Het selecteren van het beste pad om pakketten naar hun bestemming te sturen.<br>4. <b>De-encapsulation:</b> Het uitpakken van het segment uit het pakket bij de bestemming.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 8.2 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Noem de drie basiskenmerken van het IP-protocol.</h3></div>
+                        <div class="card-back">
+                            <p>1. <b>Connectionless (Verbindingsloos):</b> Er wordt geen verbinding met de bestemming opgezet voordat pakketten worden verzonden.<br>2. <b>Best Effort (Beste poging):</b> IP garandeert geen pakketbezorging. Het doet zijn best, maar betrouwbaarheid wordt afgehandeld door hogere lagen (zoals TCP).<br>3. <b>Media Independent (Media-onafhankelijk):</b> IP werkt onafhankelijk van het type medium (koper, glasvezel, draadloos).</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 8.3 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is de functie van het 'Time to Live' (TTL) veld in een IPv4 header?</h3></div>
+                        <div class="card-back">
+                            <p>TTL is een 8-bit veld dat het aantal 'hops' (routers) beperkt dat een pakket kan passeren. Elke router die het pakket doorstuurt, verlaagt de TTL-waarde met 1. Als de TTL 0 bereikt, wordt het pakket weggegooid. Dit voorkomt dat pakketten eindeloos in een lus blijven rondgaan in het netwerk.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 8.4 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat zijn de belangrijkste verbeteringen van IPv6 ten opzichte van IPv4?</h3></div>
+                        <div class="card-back">
+                            <p>1. <b>Grotere adresruimte:</b> 128-bit adressen (340 undecillion) vs 32-bit (4.3 miljard).<br>2. <b>Verbeterde pakketafhandeling:</b> Vereenvoudigde header met minder velden, wat routing efficiënter maakt.<br>3. <b>Elimineert de noodzaak van NAT:</b> Door de enorme adresruimte kunnen alle apparaten een uniek publiek adres krijgen, wat end-to-end connectiviteit herstelt.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 8.5 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Hoe beslist een host of een bestemming 'lokaal' of 'remote' is?</h3></div>
+                        <div class="card-back">
+                            <p>Een host vergelijkt het netwerkgedeelte van zijn eigen IP-adres met het netwerkgedeelte van het bestemmings-IP-adres, met behulp van zijn subnetmasker.<br><br>- Als de netwerkgedeeltes <b>hetzelfde</b> zijn, is de bestemming <b>lokaal</b>.<br>- Als de netwerkgedeeltes <b>verschillend</b> zijn, is de bestemming <b>remote</b> (op een ander netwerk).</p>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Card 8.6 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is een Default Gateway en waarom is deze nodig?</h3></div>
+                        <div class="card-back">
+                            <p>De Default Gateway is het IP-adres van de routerinterface die is verbonden met het lokale netwerk. Het fungeert als de 'deur' naar alle externe netwerken.<br><br>Een host stuurt alle pakketten die bestemd zijn voor een <b>remote</b> netwerk naar zijn default gateway. Zonder een geconfigureerde default gateway kan een host niet communiceren buiten zijn eigen lokale netwerk.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Module 9 Flashcards -->
+        <section id="module9" class="module-section">
+            <h2>Module 9: Address Resolution</h2>
+            <div class="flashcard-container">
+                <!-- Card 9.1 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is het doel van ARP (Address Resolution Protocol)?</h3></div>
+                        <div class="card-back">
+                            <p>ARP wordt gebruikt om het Layer 2 MAC-adres te vinden dat bij een bekend Layer 3 IPv4-adres hoort. Een apparaat gebruikt ARP als het een frame moet sturen naar een ander apparaat op hetzelfde lokale netwerk, maar alleen het IP-adres weet.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 9.2 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Hoe werkt het ARP-proces?</h3></div>
+                        <div class="card-back">
+                            <p>1. Apparaat A wil communiceren met IP-adres 192.168.1.10, maar kent het MAC-adres niet.<br>2. Apparaat A stuurt een <b>ARP Request</b> (een broadcast) naar het hele LAN met de vraag: "Wie heeft IP 192.168.1.10? Vertel mij je MAC-adres."<br>3. Het apparaat met dat IP-adres (Apparaat B) antwoordt met een <b>ARP Reply</b> (een unicast) direct naar Apparaat A met de boodschap: "Ik ben 192.168.1.10, en mijn MAC-adres is [MAC-adres van B]".<br>4. Apparaat A slaat deze informatie op in zijn ARP-tabel.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 9.3 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat gebeurt er als een apparaat wil communiceren met een remote netwerk?</h3></div>
+                        <div class="card-back">
+                            <p>Het apparaat weet dat de bestemming remote is. In plaats van te ARPen voor het IP-adres van de eindbestemming, zal het een ARP Request sturen voor het IP-adres van zijn <b>Default Gateway</b>. Het frame wordt dan met het MAC-adres van de router als bestemming verzonden.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 9.4 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Welk protocol gebruikt IPv6 voor adresresolutie?</h3></div>
+                        <div class="card-back">
+                            <p>IPv6 gebruikt <b>Neighbor Discovery (ND)</b> of <b>Neighbor Discovery Protocol (NDP)</b>. Het vervangt de functionaliteit van ARP in IPv4.<br><br>ND gebruikt ICMPv6-berichten:<br>- <b>Neighbor Solicitation (NS):</b> Vergelijkbaar met een ARP Request.<br>- <b>Neighbor Advertisement (NA):</b> Vergelijkbaar met een ARP Reply.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Module 10 Flashcards -->
+        <section id="module10" class="module-section">
+            <h2>Module 10: Basic Router Configuration</h2>
+            <div class="flashcard-container">
+                <!-- Card 10.1 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat zijn de basisstappen om een router te configureren?</h3></div>
+                        <div class="card-back">
+                            <p>De stappen zijn grotendeels hetzelfde als bij een switch:<br>1. Configureer de apparaatnaam (`hostname`).<br>2. Beveilig de privileged EXEC mode (`enable secret`).<br>3. Beveilig de console-toegang (`line console 0`).<br>4. Beveilig de remote Telnet/SSH toegang (`line vty 0 4`).<br>5. Versleutel platte-tekst wachtwoorden (`service password-encryption`).<br>6. Voeg een waarschuwingsbanner toe (`banner motd`).<br>7. Sla de configuratie op (`copy running-config startup-config`).</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 10.2 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Hoe configureer je een IPv4-adres op een routerinterface?</h3></div>
+                        <div class="card-back">
+                            <p>1. Ga naar global config mode: `configure terminal`<br>2. Selecteer de interface: `interface GigabitEthernet0/0/0`<br>3. Voeg een beschrijving toe: `description Link to LAN`<br>4. Wijs het IP-adres en subnetmasker toe: `ip address 192.168.10.1 255.255.255.0`<br>5. Activeer de interface: `no shutdown`</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 10.3 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Hoe configureer je een IPv6-adres op een routerinterface?</h3></div>
+                        <div class="card-back">
+                             <p>1. Ga naar global config mode: `configure terminal`<br>2. Selecteer de interface: `interface GigabitEthernet0/0/0`<br>3. Wijs het IPv6-adres en prefix-lengte toe: `ipv6 address 2001:db8:acad:10::1/64`<br>4. Activeer de interface: `no shutdown`<br><br>(Een Link-Local adres wordt meestal automatisch aangemaakt).</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 10.4 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Welke commando's gebruik je om interfaceconfiguraties te verifiëren?</h3></div>
+                        <div class="card-back">
+                            <ul>
+                                <li><b>show ip interface brief:</b> Toont een beknopt overzicht van alle interfaces, hun IPv4-adres, en hun status (up/down).</li>
+                                <li><b>show ipv6 interface brief:</b> Toont een beknopt overzicht van alle interfaces, hun IPv6-adres, en hun status.</li>
+                                <li><b>show interfaces:</b> Toont gedetailleerde statistieken voor alle interfaces.</li>
+                                <li><b>show ip route / show ipv6 route:</b> Toont de routing tabel.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 10.5 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Hoe configureer je de default gateway op een switch?</h3></div>
+                        <div class="card-back">
+                            <p>Een switch heeft een default gateway nodig om op afstand beheerd te kunnen worden vanaf een ander netwerk. Je configureert dit in global configuration mode:<br><br>`Switch(config)# ip default-gateway 192.168.10.1`<br><br>(Hierbij is 192.168.10.1 het IP-adres van de routerinterface in hetzelfde VLAN/netwerk als de SVI van de switch).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Module 11 Flashcards -->
+        <section id="module11" class="module-section">
+            <h2>Module 11: IPv4 Addressing</h2>
+            <div class="flashcard-container">
+                <!-- Card 11.1 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Uit welke twee delen bestaat een IPv4-adres?</h3></div>
+                        <div class="card-back">
+                            <p>Een IPv4-adres is een 32-bit hiërarchisch adres en bestaat uit:<br><br>1. <b>Network Portion (Netwerkdeel):</b> Het meest linkse deel van het adres dat het specifieke netwerk identificeert.<br>2. <b>Host Portion (Hostdeel):</b> Het resterende deel dat een specifiek apparaat (host) binnen dat netwerk identificeert.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 11.2 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is de functie van het subnetmasker?</h3></div>
+                        <div class="card-back">
+                            <p>Het subnetmasker wordt gebruikt om het netwerk- en hostgedeelte van een IPv4-adres van elkaar te scheiden. De binaire '1'-en in het subnetmasker corresponderen met het netwerkgedeelte, en de binaire '0'-en met het hostgedeelte.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 11.3 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is een 'prefix length' (prefixlengte)?</h3></div>
+                        <div class="card-back">
+                            <p>De prefixlengte is een kortere manier om een subnetmasker weer te geven. Het is het aantal opeenvolgende '1'-en in het subnetmasker. Het wordt geschreven met een slash (/).<br><br><b>Voorbeeld:</b><br>Subnetmasker: `255.255.255.0`<br>Binair: `11111111.11111111.11111111.00000000`<br>Prefixlengte: `/24` (omdat er 24 enen zijn).</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 11.4 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Welke drie typen adressen bestaan er binnen elk netwerk?</h3></div>
+                        <div class="card-back">
+                            <p>1. <b>Network Address (Netwerkadres):</b> Het adres dat het netwerk zelf identificeert. Alle host-bits zijn 0.<br>2. <b>Host Addresses (Hostadressen):</b> De adressen die aan eindapparaten kunnen worden toegewezen.<br>3. <b>Broadcast Address (Broadcastadres):</b> Een speciaal adres dat wordt gebruikt om een bericht naar alle hosts in het netwerk te sturen. Alle host-bits zijn 1.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 11.5 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat zijn Private IPv4-adressen (RFC 1918)?</h3></div>
+                        <div class="card-back">
+                            <p>Dit zijn adresblokken die door elke organisatie intern kunnen worden gebruikt, maar niet routeerbaar zijn over het publieke internet. Ze moeten worden vertaald door NAT (Network Address Translation) om met het internet te kunnen communiceren.<br><br><b>Ranges:</b><br>- 10.0.0.0 /8<br>- 172.16.0.0 /12<br>- 192.168.0.0 /16</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 11.6 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is subnetten en waarom doen we het?</h3></div>
+                        <div class="card-back">
+                            <p>Subnetten is het proces van het verdelen van een groot netwerk in meerdere kleinere netwerken (subnets).<br><br><b>Redenen:</b><br>- <b>Verbetert prestaties:</b> Het vermindert de totale netwerktraffic.<br>- <b>Verkleint broadcast domains:</b> Broadcasts blijven binnen hun eigen subnet, wat leidt tot minder onnodige traffic en minder belasting voor de hosts.<br>- <b>Verhoogt beveiliging:</b> Het maakt het mogelijk om beveiligingsbeleid tussen subnets te implementeren.</p>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Card 11.7 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is VLSM (Variable Length Subnet Masking)?</h3></div>
+                        <div class="card-back">
+                            <p>VLSM is een techniek waarbij je een netwerk kunt opdelen in subnets van <b>verschillende groottes</b>. Dit is veel efficiënter dan traditioneel subnetten (waarbij alle subnets even groot zijn), omdat het verspilling van IP-adressen minimaliseert.<br><br>Je kunt bijvoorbeeld een groot subnet maken voor een LAN met veel gebruikers en een heel klein subnet (bv. een /30) voor een point-to-point WAN-link die maar twee adressen nodig heeft.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Module 12 Flashcards -->
+        <section id="module12" class="module-section">
+            <h2>Module 12: IPv6 Addressing</h2>
+            <div class="flashcard-container">
+                <!-- Card 12.1 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat zijn de twee regels om een IPv6-adres in te korten?</h3></div>
+                        <div class="card-back">
+                            <p>1. <b>Weglaten van leidende nullen:</b> Binnen elk 16-bit segment (hextet) mogen de nullen aan het begin worden weggelaten. `0db8` wordt `db8`, `00a3` wordt `a3`.<br><br>2. <b>Gebruik van de dubbele punt (::):</b> Een enkele, aaneengesloten reeks van segmenten die volledig uit nullen bestaan, kan worden vervangen door `::`. Dit mag slechts één keer per adres worden toegepast.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 12.2 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Welke drie typen IPv6-adressen zijn er?</h3></div>
+                        <div class="card-back">
+                            <p>1. <b>Unicast:</b> Identificeert een unieke interface. Een pakket wordt naar die specifieke interface gestuurd.<br>2. <b>Multicast:</b> Een adres voor een groep interfaces. Een pakket wordt naar alle leden van de groep gestuurd.<br>3. <b>Anycast:</b> Een unicast-adres dat aan meerdere interfaces is toegewezen. Een pakket wordt naar de dichtstbijzijnde interface met dat adres gestuurd.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 12.3 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is een Global Unicast Address (GUA) en een Link-Local Address (LLA)?</h3></div>
+                        <div class="card-back">
+                            <p><b>GUA:</b> Een wereldwijd uniek en routeerbaar IPv6-adres, vergelijkbaar met een publiek IPv4-adres. Begint momenteel met `2000::/3`.<br><br><b>LLA:</b> Een adres dat alleen geldig en bruikbaar is binnen een lokaal netwerk (link). Niet routeerbaar. Elk IPv6-apparaat moet er een hebben. Begint altijd met `FE80::/10`.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 12.4 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Hoe krijgt een IPv6-host dynamisch een GUA?</h3></div>
+                        <div class="card-back">
+                            <p>Via ICMPv6 berichten, met name Router Advertisement (RA) berichten. Er zijn drie methoden:<br>1. <b>SLAAC:</b> Host gebruikt de prefix uit de RA en genereert zelf de Interface ID.<br>2. <b>SLAAC met stateless DHCPv6:</b> Host gebruikt SLAAC voor het adres, maar krijgt aanvullende info (zoals DNS) van een DHCPv6-server.<br>3. <b>Stateful DHCPv6:</b> De RA instrueert de host om alles (adres, DNS, etc.) van een DHCPv6-server te vragen.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Module 13 Flashcards -->
+        <section id="module13" class="module-section">
+            <h2>Module 13: ICMP</h2>
+            <div class="flashcard-container">
+                <!-- Card 13.1 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is het doel van ICMP en noem de drie meest voorkomende berichten.</h3></div>
+                        <div class="card-back">
+                            <p><b>Doel:</b> Internet Control Message Protocol (ICMP) biedt feedback over problemen met de verwerking van IP-pakketten.<br><br><b>Berichten:</b><br>1. <b>Host Reachability:</b> Echo Request en Echo Reply (gebruikt door `ping`).<br>2. <b>Destination or Service Unreachable:</b> Geeft aan dat de bestemming niet bereikt kan worden.<br>3. <b>Time Exceeded:</b> Wordt verzonden wanneer de TTL (IPv4) of Hop Limit (IPv6) van een pakket 0 wordt (gebruikt door `traceroute`).</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 13.2 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat zijn de vier ICMPv6 Neighbor Discovery (NDP) berichten?</h3></div>
+                        <div class="card-back">
+                            <p><b>1. Router Solicitation (RS):</b> Een host vraagt routers op de link om een RA te sturen.<br><b>2. Router Advertisement (RA):</b> Een router adverteert zijn aanwezigheid en geeft netwerkinformatie (zoals de prefix) door.<br><b>3. Neighbor Solicitation (NS):</b> Wordt gebruikt om het MAC-adres van een IPv6-buur te achterhalen (vergelijkbaar met ARP Request).<br><b>4. Neighbor Advertisement (NA):</b> Het antwoord op een NS-bericht, met daarin het MAC-adres (vergelijkbaar met ARP Reply).</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 13.3 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Hoe test je de TCP/IP-stack op je eigen computer?</h3></div>
+                        <div class="card-back">
+                            <p>Door het loopback-adres te pingen.<br><br>- Voor IPv4: `ping 127.0.0.1`<br>- Voor IPv6: `ping ::1`<br><br>Een succesvol antwoord bevestigt dat TCP/IP correct is geïnstalleerd en functioneert op de lokale host.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Module 14 Flashcards -->
+        <section id="module14" class="module-section">
+            <h2>Module 14: Transport Layer</h2>
+            <div class="flashcard-container">
+                <!-- Card 14.1 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat zijn de twee belangrijkste protocollen op de Transportlaag en wat is hun hoofdfunctie?</h3></div>
+                        <div class="card-back">
+                            <p>De twee protocollen zijn <b>TCP</b> en <b>UDP</b>.<br><br>Hun hoofdfunctie is het beheren van de logische communicatie tussen applicaties op verschillende hosts. Ze doen dit door data te segmenteren en poortnummers te gebruiken om de juiste applicatie te identificeren.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 14.2 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Noem de belangrijkste kenmerken van TCP (Transmission Control Protocol).</h3></div>
+                        <div class="card-back">
+                            <ul>
+                                <li><b>Connection-oriented:</b> Zet een sessie op (3-way handshake) voordat data wordt verstuurd.</li>
+                                <li><b>Reliable Delivery:</b> Garandeert dat data aankomt door middel van sequence numbers en acknowledgments.</li>
+                                <li><b>Ordered Delivery:</b> Zorgt ervoor dat segmenten in de juiste volgorde worden afgeleverd.</li>
+                                <li><b>Flow Control:</b> Beheert de datastroom om de ontvanger niet te overbelasten (via windowing).</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 14.3 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Noem de belangrijkste kenmerken van UDP (User Datagram Protocol).</h3></div>
+                        <div class="card-back">
+                             <ul>
+                                <li><b>Connectionless:</b> Er wordt geen sessie opgezet.</li>
+                                <li><b>Unreliable / Best-effort:</b> Geen garantie op bezorging, geen acknowledgments.</li>
+                                <li><b>No ordered delivery:</b> Datagrammen worden niet in volgorde geplaatst.</li>
+                                <li><b>Low overhead:</b> Simpele header, wat het protocol erg snel maakt.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 14.4 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Hoe werkt de TCP 3-Way Handshake?</h3></div>
+                        <div class="card-back">
+                            <p>Het is een proces in drie stappen om een betrouwbare verbinding op te zetten:<br>1. <b>SYN:</b> De client stuurt een SYN (Synchronize) segment naar de server om een verbinding te starten.<br>2. <b>SYN-ACK:</b> De server antwoordt met een SYN-ACK (Synchronize-Acknowledge) segment om het verzoek te bevestigen en zijn eigen verbinding op te zetten.<br>3. <b>ACK:</b> De client stuurt een ACK (Acknowledge) segment terug om de verbinding van de server te bevestigen. De verbinding is nu 'established'.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Module 15 Flashcards -->
+        <section id="module15" class="module-section">
+            <h2>Module 15: Application Layer</h2>
+            <div class="flashcard-container">
+                 <!-- Card 15.1 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Welke functies bieden de Presentation en Session lagen (OSI) die in de Application laag (TCP/IP) zijn opgenomen?</h3></div>
+                        <div class="card-back">
+                            <p><b>Presentation Layer (Laag 6):</b><br>- Formatteren van data (bv. van ASCII naar EBCDIC).<br>- Compressie en decompressie van data.<br>- Encryptie en decryptie van data.<br><br><b>Session Layer (Laag 5):</b><br>- Creëren en beheren van dialogen (sessies) tussen bron- en bestemmingsapplicaties.</p>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Card 15.2 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Beschrijf de functies van de volgende protocollen: HTTP, FTP, SMTP, DNS, DHCP.</h3></div>
+                        <div class="card-back">
+                            <ul>
+                               <li><b>HTTP/HTTPS:</b> Request/response protocol voor het uitwisselen van webpagina-informatie.</li>
+                               <li><b>FTP:</b> Protocol voor bestandsoverdracht, gebruikt twee connecties (controle en data).</li>
+                               <li><b>SMTP:</b> Protocol voor het verzenden van e-mail (client naar server, server naar server).</li>
+                               <li><b>DNS:</b> Vertaalt domeinnamen naar IP-adressen.</li>
+                               <li><b>DHCP:</b> Wijst automatisch IP-configuraties toe aan clients.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Card 15.3 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is het verschil tussen POP3 en IMAP voor het ophalen van e-mail?</h3></div>
+                        <div class="card-back">
+                            <p><b>POP3 (Post Office Protocol):</b><br>- Downloadt e-mails van de server naar de client en verwijdert ze meestal van de server.<br>- Werkt offline nadat e-mails zijn gedownload.<br><br><b>IMAP (Internet Message Access Protocol):</b><br>- Synchroniseert e-mails met de server; de e-mails blijven op de server staan.<br>- Toont dezelfde mappen/e-mails op meerdere apparaten.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Module 16 Flashcards -->
+        <section id="module16" class="module-section">
+            <h2>Module 16: Network Security Fundamentals</h2>
+            <div class="flashcard-container">
+                 <!-- Card 16.1 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat zijn de drie primaire soorten kwetsbaarheden (vulnerabilities)?</h3></div>
+                        <div class="card-back">
+                            <p>1. <b>Technological:</b> Zwaktes in protocollen (bv. TCP/IP) of besturingssystemen.<br>2. <b>Configuration:</b> Fouten gemaakt tijdens de configuratie (bv. zwakke wachtwoorden, onveilige standaardinstellingen).<br>3. <b>Security Policy:</b> Gebrek aan een goed beveiligingsbeleid, of het niet naleven ervan.</p>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Card 16.2 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is het verschil tussen een virus, een worm en een Trojaans paard?</h3></div>
+                        <div class="card-back">
+                            <p><b>Virus:</b> Malware die zichzelf verspreidt door zich aan een ander programma te hechten en een menselijke actie nodig heeft om te activeren.<br><b>Worm:</b> Standalone malware die zichzelf kan repliceren en verspreiden zonder menselijke tussenkomst, vaak via netwerkkwetsbaarheden.<br><b>Trojaans Paard:</b> Malware die zich voordoet als legitieme software om een gebruiker te verleiden het uit te voeren.</p>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Card 16.3 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat zijn de drie hoofdcategorieën van netwerkaanvallen?</h3></div>
+                        <div class="card-back">
+                            <p>1. <b>Reconnaissance Attacks:</b> Het ongeautoriseerd ontdekken en in kaart brengen van systemen, diensten of kwetsbaarheden (bv. pingen, port scanning).<br>2. <b>Access Attacks:</b> Het ongeautoriseerd verkrijgen van toegang tot data of privileges (bv. password attacks, man-in-the-middle).<br>3. <b>Denial of Service (DoS):</b> Het onbruikbaar maken van een netwerk of dienst voor legitieme gebruikers (bv. DDoS-aanval).</p>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Card 16.4 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat houdt het 'Defense-in-Depth' (gelaagde beveiliging) principe in?</h3></div>
+                        <div class="card-back">
+                            <p>Het idee dat beveiliging effectiever is als het in meerdere lagen wordt geïmplementeerd. Als een aanvaller door één laag heen breekt, wordt hij tegengehouden door de volgende. Dit omvat een combinatie van VPN, firewalls, Intrusion Prevention Systems (IPS), AAA-servers, en endpoint security.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Module 17 Flashcards -->
+        <section id="module17" class="module-section">
+            <h2>Module 17: Build a Small Network</h2>
+            <div class="flashcard-container">
+                 <!-- Card 17.1 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Waar moet je rekening mee houden bij het selecteren van apparaten voor een klein netwerk?</h3></div>
+                        <div class="card-back">
+                            <ul>
+                                <li><b>Cost (Kosten):</b> Het budget voor de apparatuur.</li>
+                                <li><b>Speed and Ports:</b> De vereiste snelheid en het type/aantal poorten.</li>
+                                <li><b>Expandability (Uitbreidbaarheid):</b> Kan het netwerk meegroeien met het bedrijf?</li>
+                                <li><b>OS Features:</b> Welke functies en diensten zijn nodig?</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Card 17.2 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is het nut van een 'network baseline'?</h3></div>
+                        <div class="card-back">
+                            <p>Een network baseline is een momentopname van de normale prestaties van een netwerk. Het wordt gebruikt als referentiepunt. Door de huidige prestaties te vergelijken met de baseline, kun je problemen, afwijkingen en de impact van veranderingen snel identificeren.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 17.3 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Welke informatie toont het `show cdp neighbors detail` commando?</h3></div>
+                        <div class="card-back">
+                            <p>Dit commando toont gedetailleerde informatie over direct verbonden Cisco-apparaten. In tegenstelling tot het standaard `show cdp neighbors` commando, onthult de `detail` versie ook belangrijke Layer 3 informatie, zoals het <b>IP-adres</b> van het naburige apparaat.</p>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Card 17.4 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is APIPA en wanneer wordt het gebruikt?</h3></div>
+                        <div class="card-back">
+                            <p><b>APIPA (Automatic Private IP Addressing)</b> is een Windows-functie.<br><br>Wanneer een Windows-apparaat is ingesteld op DHCP maar er geen DHCP-server kan bereiken, wijst het zichzelf automatisch een IP-adres toe in de range <b>169.254.0.0/16</b>. Apparaten met een APIPA-adres kunnen alleen communiceren met andere apparaten in hetzelfde APIPA-subnet, maar niet met het internet of andere netwerken.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Extra Modules (Dutch) -->
+        <section id="module_extra" class="module-section">
+            <h2>Extra: Beveiligingsconcepten (BIV, Crypto)</h2>
+            <div class="flashcard-container">
+                 <!-- Card extra.1 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Waar staat BIV voor en wat is de Engelse term?</h3></div>
+                        <div class="card-back">
+                            <p><b>BIV</b> staat voor:<br>- <b>Beschikbaarheid:</b> Informatie is toegankelijk wanneer nodig.<br>- <b>Integriteit:</b> Informatie is correct, volledig en niet ongeautoriseerd gewijzigd.<br>- <b>Vertrouwelijkheid (Exclusiviteit):</b> Informatie is alleen toegankelijk voor geautoriseerde personen.<br><br>De Engelse term is de <b>CIA Triad</b> (Confidentiality, Integrity, Availability).</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card extra.2 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is het verschil tussen Symmetrische en Asymmetrische cryptografie?</h3></div>
+                        <div class="card-back">
+                            <p><b>Symmetrisch:</b> Gebruikt <b>één en dezelfde sleutel</b> voor zowel encryptie (versleutelen) als decryptie (ontsleutelen). Is snel, maar heeft als nadeel dat de sleutel veilig moet worden uitgewisseld.<br><br><b>Asymmetrisch:</b> Gebruikt een <b>sleutelpaar</b>: een publieke sleutel om te versleutelen en een private sleutel om te ontsleutelen. De publieke sleutel mag met iedereen gedeeld worden.</p>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Card extra.3 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is een hashfunctie en waarvoor wordt het gebruikt?</h3></div>
+                        <div class="card-back">
+                            <p>Een hashfunctie is een algoritme dat data van willekeurige grootte omzet naar een vaste, unieke output (de 'hash' of 'vingerafdruk').<br><br><b>Eigenschappen/Gebruik:</b><br>- Een kleine wijziging in de input resulteert in een compleet andere hash.<br>- Het is een eenrichtingsfunctie (niet omkeerbaar).<br>- Wordt gebruikt om <b>integriteit</b> van data te controleren en voor het opslaan van wachtwoorden.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card extra.4 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Hoe werkt een Digitale Handtekening (Digital Signature)?</h3></div>
+                        <div class="card-back">
+                            <p>Een digitale handtekening garandeert authenticiteit (wie is de afzender) en integriteit (is het bericht ongewijzigd).<br><br><b>Proces:</b><br>1. Maak een hash van het bericht.<br>2. Versleutel deze hash met je <b>private key</b>.<br>3. Stuur het bericht + de versleutelde hash mee.<br>De ontvanger kan met jouw <b>public key</b> de hash ontsleutelen en vergelijken met een zelfgemaakte hash van het bericht.</p>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Card extra.5 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is PKI (Public Key Infrastructure)?</h3></div>
+                        <div class="card-back">
+                            <p>PKI is een systeem van hardware, software, beleid en procedures dat nodig is om digitale certificaten te creëren, beheren, distribueren, gebruiken, opslaan en intrekken.<br><br>Het hoofddoel is het veilig beheren van publieke sleutels en het binden van deze sleutels aan de identiteit van entiteiten via <b>digitale certificaten</b>.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card extra.6 -->
+                <div class="flashcard">
+                    <div class="card-inner">
+                        <div class="card-front"><h3>Wat is de rol van een Certificate Authority (CA)?</h3></div>
+                        <div class="card-back">
+                            <p>Een Certificate Authority (CA) is een <b>vertrouwde derde partij (Trusted Third Party)</b> die digitale certificaten uitgeeft.<br><br>De CA verifieert de identiteit van een aanvrager (bv. een website of persoon) en 'ondertekent' vervolgens de publieke sleutel van die aanvrager met de eigen private key. Dit creëert een digitaal certificaat dat de koppeling tussen identiteit en publieke sleutel bevestigt.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- NIEUWE HTML VOOR DE MODAL -->
+    <div id="modal-overlay">
+        <div class="modal-content">
+            <!-- Gekloonde flashcard wordt hier door JavaScript geplaatst -->
+        </div>
+    </div>
+    
+    <footer>
+        <p>Succes met studeren!</p>
+    </footer>
+
+    <!-- AANGEPAST JAVASCRIPT -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Smooth scroll voor ankerlinks
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // --- NIEUWE MODAL EN FLASHCARD LOGICA ---
+            const originalCards = document.querySelectorAll('.flashcard');
+            const modalOverlay = document.getElementById('modal-overlay');
+            const modalContent = document.querySelector('.modal-content');
+
+            // Functie om de modal te sluiten
+            const closeModal = () => {
+                modalOverlay.classList.remove('active');
+                // Een kleine vertraging om de fade-out animatie af te maken voordat de inhoud wordt gewist
+                setTimeout(() => {
+                    modalContent.innerHTML = ''; 
+                }, 300);
+            };
+
+            // Voeg een click event listener toe aan elke originele kaart
+            originalCards.forEach(card => {
+                card.addEventListener('click', (event) => {
+                    // Stop de event propagatie om te voorkomen dat de modal meteen probeert te sluiten
+                    event.stopPropagation();
+
+                    // Kloon de geklikte kaart
+                    const clonedCard = card.cloneNode(true);
+                    
+                    // Zorg ervoor dat de gekloonde kaart altijd met de voorkant begint
+                    clonedCard.classList.remove('is-flipped');
+                    
+                    // Maak de modal-inhoud leeg en voeg de gekloonde kaart toe
+                    modalContent.innerHTML = '';
+                    modalContent.appendChild(clonedCard);
+                    
+                    // Voeg een click listener toe AAN DE BINNENKANT van de gekloonde kaart om te flippen
+                    const clonedCardInner = clonedCard.querySelector('.card-inner');
+                    clonedCardInner.addEventListener('click', (e) => {
+                        e.stopPropagation(); // Voorkom dat klikken op de kaart de modal sluit
+                        clonedCard.classList.toggle('is-flipped');
+                    });
+                    
+                    // Toon de modal
+                    modalOverlay.classList.add('active');
+                });
+            });
+
+            // Sluit de modal als er op de achtergrond (overlay) wordt geklikt
+            modalOverlay.addEventListener('click', (event) => {
+                if (event.target === modalOverlay) {
+                    closeModal();
+                }
+            });
+
+            // Sluit de modal met de Escape-toets
+            window.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && modalOverlay.classList.contains('active')) {
+                    closeModal();
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
